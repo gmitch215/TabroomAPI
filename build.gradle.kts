@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "2.0.20"
+    id("org.jetbrains.kotlin.native.cocoapods") version "2.0.20"
     id("org.jetbrains.dokka") version "1.9.20"
     id("com.android.library") version "8.2.2"
 
@@ -31,7 +32,6 @@ kotlin {
             }
         }
 
-        nodejs()
         generateTypeScriptDefinitions()
     }
 
@@ -51,12 +51,19 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-            implementation("io.ktor:ktor-client-core:2.3.12")
-            implementation("io.ktor:ktor-client-cio:2.3.12")
         }
 
         jvmMain.dependencies {
             implementation("org.jsoup:jsoup:1.18.1")
+            implementation("io.ktor:ktor-client-core:2.3.12")
+            implementation("io.ktor:ktor-client-cio:2.3.12")
+        }
+
+        listOf(appleMain, linuxMain).forEach { sourceSet ->
+            sourceSet.dependencies {
+                implementation("io.ktor:ktor-client-core:2.3.12")
+                implementation("io.ktor:ktor-client-cio:2.3.12")
+            }
         }
     }
 }

@@ -1,7 +1,9 @@
 package xyz.gmitch215.tabroom.util.html
 
-internal interface Document : Element {
+internal class Document(
+    val url: String,
+    val html: String
+)
 
-    val url: String
-
-}
+internal expect fun Document.querySelectorAll(selector: String): List<Element>
+internal fun Document.querySelector(selector: String): Element? = querySelectorAll(selector).firstOrNull()
