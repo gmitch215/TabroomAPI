@@ -38,8 +38,8 @@ kotlin {
     mingwX64()
     macosX64()
     macosArm64()
-    linuxArm64()
     linuxX64()
+    linuxArm64()
 
     iosX64()
     iosArm64()
@@ -49,21 +49,36 @@ kotlin {
     }
 
     sourceSets {
+        val ktorVersion = "3.0.0-rc-2"
+
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+            implementation("io.ktor:ktor-client-core:$ktorVersion")
         }
 
         jvmMain.dependencies {
             implementation("org.jsoup:jsoup:1.18.1")
-            implementation("io.ktor:ktor-client-core:2.3.12")
-            implementation("io.ktor:ktor-client-cio:2.3.12")
+            implementation("io.ktor:ktor-client-apache5:$ktorVersion")
         }
 
-        listOf(appleMain, linuxMain).forEach { sourceSet ->
-            sourceSet.dependencies {
-                implementation("io.ktor:ktor-client-core:2.3.12")
-                implementation("io.ktor:ktor-client-cio:2.3.12")
-            }
+        androidMain.dependencies {
+            implementation("io.ktor:ktor-client-android:$ktorVersion")
+        }
+
+        mingwMain.dependencies {
+            implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
+        }
+
+        appleMain.dependencies {
+            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+        }
+
+        linuxMain.dependencies {
+            implementation("io.ktor:ktor-client-cio:$ktorVersion")
+        }
+
+        jsMain.dependencies {
+            implementation("io.ktor:ktor-client-js:$ktorVersion")
         }
     }
 }

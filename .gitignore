@@ -5,3 +5,4 @@ node_modules/
 .kotlin/
 build/
 *.podspec
+local.properties
