@@ -24,6 +24,8 @@ java {
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
+
     jvm()
     js {
         browser {
@@ -61,8 +63,15 @@ kotlin {
             implementation("io.ktor:ktor-client-apache5:$ktorVersion")
         }
 
-        androidMain.dependencies {
-            implementation("io.ktor:ktor-client-android:$ktorVersion")
+        androidMain {
+            dependsOn(jvmMain.get())
+            dependencies {
+                implementation("io.ktor:ktor-client-android:$ktorVersion")
+            }
+        }
+
+        nativeMain.dependencies {
+            implementation("com.fleeksoft.ksoup:ksoup-lite:0.1.9")
         }
 
         mingwMain.dependencies {
