@@ -2,14 +2,17 @@ package xyz.gmitch215.tabroom.util.html
 
 import com.fleeksoft.ksoup.Ksoup
 
+private fun com.fleeksoft.ksoup.nodes.Element.convert(): Element {
+    return Element(
+        tagName(),
+        html(),
+        text(),
+        attributes().associate { it.key to it.value },
+        children().map { it.convert() }
+    )
+}
+
 internal actual fun Document.querySelectorAll(selector: String): List<Element> {
     val doc = Ksoup.parse(selector)
-    return doc.select(selector).map { element ->
-        Element(
-            element.tagName(),
-            element.html(),
-            element.text(),
-            element.attributes().associate { it.key to it.value }
-        )
-    }
+    return doc.select(selector).map { it.convert() }
 }

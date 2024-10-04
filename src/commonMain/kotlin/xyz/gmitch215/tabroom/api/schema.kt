@@ -19,7 +19,15 @@ data class Tournament(
     /**
      * The year the tournament takes place in.
      */
-    val year: String
+    val year: String,
+    /**
+     * The location of the tournament.
+     */
+    val location: String,
+    /**
+     * The events in the tournament.
+     */
+    val events: List<Event> = mutableListOf(),
 )
 
 /**
