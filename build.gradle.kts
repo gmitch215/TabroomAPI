@@ -58,9 +58,14 @@ kotlin {
             implementation("io.ktor:ktor-client-core:$ktorVersion")
         }
 
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+        }
+
         jvmMain.dependencies {
             implementation("org.jsoup:jsoup:1.18.1")
-            implementation("io.ktor:ktor-client-apache5:$ktorVersion")
+            implementation("io.ktor:ktor-client-jetty:$ktorVersion")
         }
 
         androidMain {
