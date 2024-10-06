@@ -28,6 +28,10 @@ data class Tournament(
      * The events in the tournament.
      */
     val events: List<Event> = mutableListOf(),
+    /**
+     * The judges in the tournament.
+     */
+    val judges: Map<String, List<Judge>> = mutableMapOf(),
 )
 
 /**
@@ -38,6 +42,14 @@ data class Event(
      * The name of the event.
      */
     val name: String,
+    /**
+     * The ID of the event.
+     */
+    val id: Int,
+    /**
+     * The fields in the event that represent its properties, such as fees, topic, etc.
+     */
+    val fields: Map<String, String> = emptyMap(),
     /**
      * The entries in the event.
      */
@@ -64,7 +76,11 @@ data class Entry(
     /**
      * The entry code of the entry.
      */
-    val code: String
+    val code: String,
+    /**
+     * The preliminary record of the entry.
+     */
+    var prelimination: TournamentRecord? = null
 )
 
 /**
@@ -88,9 +104,9 @@ data class Judge(
      */
     val location: String,
     /**
-     * The number of rounds this judge has judged, or 0 if the tournament is still ongoing.
+     * Whether the judge has a paradigm, or things they want to see in the round.
      */
-    val rounds: Int
+    val hasParadigm: Boolean,
 )
 
 // Records
