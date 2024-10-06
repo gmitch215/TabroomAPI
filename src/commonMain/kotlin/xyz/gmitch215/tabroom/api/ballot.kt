@@ -1,5 +1,14 @@
 package xyz.gmitch215.tabroom.api
 
+/**
+ * Represents a tournament record.
+ *
+ * For Debate, both [wins] and [losses] are used.
+ *
+ * For Speech, [wins] represents the current rank, and [losses] is always `-1`.
+ *
+ * For Congress, [wins] and [losses] are both `0`.
+ */
 data class TournamentRecord(
     /**
      * The number of wins the entry has.
@@ -32,7 +41,10 @@ data class TournamentRecord(
      * The record as a string.
      * @return The record as a string.
      */
-    override fun toString(): String = "$wins-$losses"
+    override fun toString(): String {
+        if (losses < 0) return "$wins"
+        return "$wins-$losses"
+    }
 
     operator fun plus(other: TournamentRecord?): TournamentRecord {
         return TournamentRecord(wins + (other?.wins ?: 0), losses + (other?.losses ?: 0))
