@@ -100,7 +100,7 @@ kotlin {
 
 android {
     compileSdk = 33
-    namespace = "xyz.gmitch215.tabroom-api"
+    namespace = "xyz.gmitch215.tabroomapi"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
