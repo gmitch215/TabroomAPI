@@ -2,6 +2,7 @@ package xyz.gmitch215.tabroom.api
 
 import xyz.gmitch215.tabroom.util.TabroomUrls
 import xyz.gmitch215.tabroom.util.fetchDocument
+import xyz.gmitch215.tabroom.util.getAllJudges
 import xyz.gmitch215.tabroom.util.getEvents
 import xyz.gmitch215.tabroom.util.getTournament
 
@@ -17,8 +18,14 @@ suspend fun getTournament(id: Int): Tournament {
     val tourney = getTournament(home)
 
     val entries = urls.entries.fetchDocument()
-    val events = getEvents(entries)
+    val eventsDoc = urls.events.fetchDocument()
+
+    val events = getEvents(entries, eventsDoc)
     (tourney.events as MutableList).addAll(events)
+
+    val judgesDoc = urls.judges.fetchDocument()
+    val judges = getAllJudges(judgesDoc)
+    (tourney.judges as MutableMap).putAll(judges)
 
     return tourney
 }
