@@ -15,6 +15,7 @@ version = if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v
 description = "Multiplatform API for Tabroom.com"
 
 repositories {
+    google()
     mavenCentral()
     mavenLocal()
 }
