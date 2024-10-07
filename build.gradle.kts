@@ -30,9 +30,10 @@ kotlin {
 
     jvm()
     js {
+        nodejs()
         browser {
             testTask {
-                useMocha()
+                enabled = false
             }
         }
 
@@ -71,7 +72,6 @@ kotlin {
         }
 
         androidMain {
-            dependsOn(jvmMain.get())
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
             }
@@ -95,6 +95,7 @@ kotlin {
 
         jsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
+            implementation("com.fleeksoft.ksoup:ksoup-lite:0.1.9")
         }
     }
 }
