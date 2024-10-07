@@ -6,3 +6,4 @@ node_modules/
 build/
 *.podspec
 local.properties
+kotlin-js-store/
