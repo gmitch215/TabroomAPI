@@ -13,19 +13,19 @@ data class TournamentRecord(
     /**
      * The number of wins the entry has.
      */
-    val wins: Int,
+    val wins: Double,
     /**
      * The number of losses the entry has.
      */
-    val losses: Int
+    val losses: Double
 ) {
 
-    constructor() : this(0, 0)
+    constructor() : this(0.0, 0.0)
 
     /**
      * The total number of rounds the entry has competed in.
      */
-    val total: Int get() = wins + losses
+    val total: Double get() = wins + losses
 
     /**
      * The win percentage of the entry.
@@ -47,22 +47,25 @@ data class TournamentRecord(
     }
 
     operator fun plus(other: TournamentRecord?): TournamentRecord {
-        return TournamentRecord(wins + (other?.wins ?: 0), losses + (other?.losses ?: 0))
+        return TournamentRecord(wins + (other?.wins ?: 0.0), losses + (other?.losses ?: 0.0))
     }
 
     operator fun minus(other: TournamentRecord?): TournamentRecord {
-        return TournamentRecord(wins - (other?.wins ?: 0), losses - (other?.losses ?: 0))
+        return TournamentRecord(wins - (other?.wins ?: 0.0), losses - (other?.losses ?: 0.0))
     }
 
     companion object {
         /**
          * A record with no wins or losses.
          */
-        val NONE = TournamentRecord(0, 0)
+        val NONE = TournamentRecord(0.0, 0.0)
 
         fun fromString(record: String): TournamentRecord {
+            if (record.isEmpty() || record.isBlank()) return NONE
+            if (!record.contains("-")) return NONE
+
             val (wins, losses) = record.split("-")
-            return TournamentRecord(wins.toInt(), losses.toInt())
+            return TournamentRecord(wins.toDouble(), losses.toDouble())
         }
     }
 
@@ -74,8 +77,10 @@ data class TournamentRecord(
  * @return The parsed record.
  */
 fun parseMultiJudge(record: String): TournamentRecord {
+    if (record.isEmpty() || record.isBlank()) return TournamentRecord.NONE
+
     val wins = record.count { it == 'W' }
     val losses = record.count { it == 'L' }
 
-    return TournamentRecord(wins, losses)
+    return TournamentRecord(wins.toDouble(), losses.toDouble())
 }
