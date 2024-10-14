@@ -80,7 +80,11 @@ data class Entry(
     /**
      * The preliminary record of the entry.
      */
-    var prelimination: TournamentRecord? = null
+    var prelimination: TournamentRecord? = null,
+    /**
+     * The full record of the entry.
+     */
+    var record: EntryRecord? = null
 )
 
 /**
@@ -146,7 +150,7 @@ enum class DebateLevel {
         get() = when (this) {
             NOVICE -> listOf("n")
             JV -> listOf("junior varsity", "middle")
-            VARSITY -> listOf("v")
+            VARSITY -> listOf("v", "champ")
             OPEN -> listOf("o")
         } + name.lowercase()
 
@@ -164,7 +168,93 @@ enum class DebateLevel {
 }
 
 /**
- * Represents the result of a tournament.
+ * Represents a tournament record.
+ */
+interface EntryRecord : Iterable<TournamentResult> {
+    /**
+     * The name of the entry.
+     */
+    val title: String
+    /**
+     * The results for the current season.
+     */
+    val currentSeason: List<CurrentSeasonResult>
+
+    /**
+     * Gets the results for the tournaments across all seasons.
+     * @return The list of tournament results.
+     */
+    val results: List<TournamentResult>
+        get() = this.toList()
+}
+
+/**
+ * Represents an entry record for a single person.
+ */
+data class SingleEntryRecord(
+    override val title: String,
+    override val currentSeason: List<CurrentSeasonResult>,
+    /**
+     * The results for the tournaments in the current season.
+     */
+    val currentSeasonTournaments: List<TournamentResult>,
+    /**
+     * The results for the tournaments in previous seasons.
+     */
+    val previousSeasonTournaments: List<TournamentResult>
+) : EntryRecord {
+    override fun iterator(): Iterator<TournamentResult> = (currentSeasonTournaments + previousSeasonTournaments).iterator()
+}
+
+/**
+ * Represents an entry record for two people.
+ */
+data class DoubleEntryRecord(
+    override val title: String,
+    override val currentSeason: List<CurrentSeasonResult>,
+    /**
+     * The results for the tournaments in the current season.
+     */
+    val currentSeasonTournaments: List<TournamentResult>,
+    /**
+     * The results for the tournaments in the current season with the first partner and a separate person.
+     */
+    val firstOthersCurrentSeasonTournaments: List<TournamentResult>,
+    /**
+     * The results for the tournaments in the current season with the second partner and a separate person.
+     */
+    val secondOthersCurrentSeasonTournaments: List<TournamentResult>,
+    /**
+     * The results for the tournaments in previous seasons.
+     */
+    val previousSeasonTournaments: List<TournamentResult>,
+    /**
+     * The results for the tournaments in previous seasons with the first partner and a separate person.
+     */
+    val firstOthersPreviousSeasonTournaments: List<TournamentResult>,
+    /**
+     * The results for the tournaments in previous seasons with the second partner and a separate person.
+     */
+    val secondOthersPreviousSeasonTournaments: List<TournamentResult>
+) : EntryRecord {
+
+    /**
+     * The first partner of the entry.
+     */
+    val firstPartner: String = title.substringBefore(" & ")
+
+    /**
+     * The second partner of the entry.
+     */
+    val secondPartner: String = title.substringAfter(" & ")
+
+    override fun iterator(): Iterator<TournamentResult>
+        = (currentSeasonTournaments + firstOthersCurrentSeasonTournaments + secondOthersCurrentSeasonTournaments +
+                previousSeasonTournaments + firstOthersPreviousSeasonTournaments + secondOthersPreviousSeasonTournaments).iterator()
+}
+
+/**
+ * Represents a result for the current season.
  */
 data class CurrentSeasonResult(
     /**
@@ -172,13 +262,21 @@ data class CurrentSeasonResult(
      */
     val division: DebateLevel,
     /**
-     * The number of rounds the entry has participated in.
+     * The number of preliminary wins the entry has.
      */
-    val count: Int,
+    val preliminationWins: Int,
     /**
-     * The number of wins the entry has.
+     * The number of preliminary losses the entry has.
      */
-    val wins: Int
+    val preliminationCount: Int,
+    /**
+     * The number of elimination wins the entry has.
+     */
+    val eliminationWins: Int,
+    /**
+     * The number of elimination losses the entry has.
+     */
+    val eliminationCount: Int
 ) {
     /**
      * The percentage win rate of the entry.
@@ -187,10 +285,46 @@ data class CurrentSeasonResult(
         get() = wins.toDouble() / count
 
     /**
+     * The percentage win rate of the entry in the preliminary rounds.
+     */
+    val preliminationPercentage: Double
+        get() = preliminationWins.toDouble() / preliminationCount
+
+    /**
+     * The percentage win rate of the entry in the elimination rounds.
+     */
+    val eliminationPercentage: Double
+        get() = eliminationWins.toDouble() / eliminationCount
+
+    /**
+     * The number of rounds the entry has participated in.
+     */
+    val count: Int
+        get() = preliminationCount + eliminationCount
+
+    /**
+     * The number of wins the entry has.
+     */
+    val wins: Int
+        get() = preliminationWins + eliminationWins
+
+    /**
      * The number of losses the entry has.
      */
     val losses: Int
         get() = count - wins
+
+    /**
+     * The number of prelimination losses the entry has.
+     */
+    val preliminationLosses: Int
+        get() = preliminationCount - preliminationWins
+
+    /**
+     * The number of elimination losses the entry has.
+     */
+    val eliminationLosses: Int
+        get() = eliminationCount - eliminationWins
 }
 
 /**
