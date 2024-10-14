@@ -10,5 +10,5 @@ internal actual val engine: HttpClientEngine = WinHttp.create {
     pipelining = true
     protocolVersion = HttpProtocolVersion.HTTP_2_0
     securityProtocols = WinHttpSecurityProtocol.Tls11
-    dispatcher = Dispatchers.IO.limitedParallelism(4)
+    dispatcher = Dispatchers.IO.limitedParallelism(PARALLEL_COUNT)
 }

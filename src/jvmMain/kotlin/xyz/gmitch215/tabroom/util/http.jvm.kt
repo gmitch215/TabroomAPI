@@ -6,5 +6,5 @@ import kotlinx.coroutines.Dispatchers
 
 internal actual val engine: HttpClientEngine = Jetty.create {
     pipelining = true
-    dispatcher = Dispatchers.IO.limitedParallelism(4)
+    dispatcher = Dispatchers.IO.limitedParallelism(PARALLEL_COUNT)
 }

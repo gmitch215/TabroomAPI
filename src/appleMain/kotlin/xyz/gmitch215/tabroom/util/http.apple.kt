@@ -7,5 +7,5 @@ import kotlinx.coroutines.IO
 
 internal actual val engine: HttpClientEngine = Darwin.create {
     pipelining = true
-    dispatcher = Dispatchers.IO.limitedParallelism(4)
+    dispatcher = Dispatchers.IO.limitedParallelism(PARALLEL_COUNT)
 }

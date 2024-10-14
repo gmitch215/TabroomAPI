@@ -9,6 +9,7 @@ import io.ktor.utils.io.charsets.*
 import kotlinx.io.IOException
 import xyz.gmitch215.tabroom.util.html.Document
 
+internal const val PARALLEL_COUNT = 16
 internal expect val engine: HttpClientEngine
 
 internal val client
@@ -17,6 +18,7 @@ internal val client
     }
 
 internal suspend fun String.fetchDocument(): Document {
+    // FIXME: Tabroom record results are loaded by JavaScript
     val res = client.get(this) {
         headers {
             append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
