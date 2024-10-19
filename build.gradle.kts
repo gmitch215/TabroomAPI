@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     id("org.jetbrains.kotlin.native.cocoapods") version "2.0.21"
     id("org.jetbrains.dokka") version "1.9.20"
-    id("com.android.library") version "8.2.2"
+    id("com.android.library") version "8.7.1"
 
     `maven-publish`
     jacoco
