@@ -20,7 +20,6 @@ class TestFetcher {
 
         // Schaumburg 2024
         val t2 = getTournament(32668)
-        println(t2.judges)
 
         assertTrue(t2.name.isNotEmpty())
         assertTrue(t2.descriptionHTML.isNotEmpty())
