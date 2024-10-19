@@ -28,6 +28,7 @@ java {
 
 kotlin {
     applyDefaultHierarchyTemplate()
+    withSourcesJar()
 
     jvm()
     js {
@@ -154,6 +155,19 @@ publishing {
                     }
                 }
             }
+        }
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username = System.getenv("NEXUS_USERNAME")
+                password = System.getenv("NEXUS_PASSWORD")
+            }
+
+            val releases = "https://repo.calcugames.xyz/repository/maven-releases/"
+            val snapshots = "https://repo.calcugames.xyz/repository/maven-snapshots/"
+            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshots else releases)
         }
     }
 }
