@@ -136,7 +136,7 @@ jobs:
         run: bash dokka.sh ${GITHUB_SHA::7}
 
   publish:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: build
     name: Publish to Repository
     if: ${{ github.event_name != 'pull_request' && github.ref_name == 'master' }}
