@@ -1,5 +1,12 @@
 package xyz.gmitch215.tabroom.api
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
 /**
  * Represents a tournament.
  */
@@ -78,13 +85,9 @@ data class Entry(
      */
     val code: String,
     /**
-     * The preliminary record of the entry.
+     * All the ballots for this entry.
      */
-    var prelimination: TournamentRecord? = null,
-    /**
-     * The full record of the entry.
-     */
-    var record: EntryRecord? = null
+    val ballots: Map<Int, Ballot> = mutableMapOf()
 )
 
 /**
@@ -118,6 +121,7 @@ data class Judge(
 /**
  * The level of a debate.
  */
+@Serializable(with = DebateLevelSerializer::class)
 enum class DebateLevel {
     /**
      * The level is novice, and only those who are in their first year of debate can participate.
@@ -151,7 +155,7 @@ enum class DebateLevel {
             NOVICE -> listOf("n")
             JV -> listOf("junior varsity", "middle")
             VARSITY -> listOf("v", "champ")
-            OPEN -> listOf("o")
+            OPEN -> listOf("o", "rr")
         } + name.lowercase()
 
     companion object {
@@ -168,220 +172,17 @@ enum class DebateLevel {
 }
 
 /**
- * Represents a tournament record.
+ * Represents the serializer for [DebateLevel].
  */
-interface EntryRecord : Iterable<TournamentResult> {
-    /**
-     * The name of the entry.
-     */
-    val title: String
-    /**
-     * The results for the current season.
-     */
-    val currentSeason: List<CurrentSeasonResult>
+object DebateLevelSerializer : KSerializer<DebateLevel> {
+    override val descriptor = PrimitiveSerialDescriptor("DebateLevel", PrimitiveKind.STRING)
 
-    /**
-     * Gets the results for the tournaments across all seasons.
-     * @return The list of tournament results.
-     */
-    val results: List<TournamentResult>
-        get() = this.toList()
-}
+    override fun deserialize(decoder: Decoder): DebateLevel {
+        val str = decoder.decodeString()
+        return DebateLevel.fromString(str) ?: error("Unknown DebateLevel '$str'")
+    }
 
-/**
- * Represents an entry record for a single person.
- */
-data class SingleEntryRecord(
-    override val title: String,
-    override val currentSeason: List<CurrentSeasonResult>,
-    /**
-     * The results for the tournaments in the current season.
-     */
-    val currentSeasonTournaments: List<TournamentResult>,
-    /**
-     * The results for the tournaments in previous seasons.
-     */
-    val previousSeasonTournaments: List<TournamentResult>
-) : EntryRecord {
-    override fun iterator(): Iterator<TournamentResult> = (currentSeasonTournaments + previousSeasonTournaments).iterator()
-}
-
-/**
- * Represents an entry record for two people.
- */
-data class DoubleEntryRecord(
-    override val title: String,
-    override val currentSeason: List<CurrentSeasonResult>,
-    /**
-     * The results for the tournaments in the current season.
-     */
-    val currentSeasonTournaments: List<TournamentResult>,
-    /**
-     * The results for the tournaments in the current season with the first partner and a separate person.
-     */
-    val firstOthersCurrentSeasonTournaments: List<TournamentResult>,
-    /**
-     * The results for the tournaments in the current season with the second partner and a separate person.
-     */
-    val secondOthersCurrentSeasonTournaments: List<TournamentResult>,
-    /**
-     * The results for the tournaments in previous seasons.
-     */
-    val previousSeasonTournaments: List<TournamentResult>,
-    /**
-     * The results for the tournaments in previous seasons with the first partner and a separate person.
-     */
-    val firstOthersPreviousSeasonTournaments: List<TournamentResult>,
-    /**
-     * The results for the tournaments in previous seasons with the second partner and a separate person.
-     */
-    val secondOthersPreviousSeasonTournaments: List<TournamentResult>
-) : EntryRecord {
-
-    /**
-     * The first partner of the entry.
-     */
-    val firstPartner: String = title.substringBefore(" & ")
-
-    /**
-     * The second partner of the entry.
-     */
-    val secondPartner: String = title.substringAfter(" & ")
-
-    override fun iterator(): Iterator<TournamentResult>
-        = (currentSeasonTournaments + firstOthersCurrentSeasonTournaments + secondOthersCurrentSeasonTournaments +
-                previousSeasonTournaments + firstOthersPreviousSeasonTournaments + secondOthersPreviousSeasonTournaments).iterator()
-}
-
-/**
- * Represents a result for the current season.
- */
-data class CurrentSeasonResult(
-    /**
-     * The division of the debate for the result.
-     */
-    val division: DebateLevel,
-    /**
-     * The number of preliminary wins the entry has.
-     */
-    val preliminationWins: Int,
-    /**
-     * The number of preliminary losses the entry has.
-     */
-    val preliminationCount: Int,
-    /**
-     * The number of elimination wins the entry has.
-     */
-    val eliminationWins: Int,
-    /**
-     * The number of elimination losses the entry has.
-     */
-    val eliminationCount: Int
-) {
-    /**
-     * The percentage win rate of the entry.
-     */
-    val percentage: Double
-        get() = wins.toDouble() / count
-
-    /**
-     * The percentage win rate of the entry in the preliminary rounds.
-     */
-    val preliminationPercentage: Double
-        get() = preliminationWins.toDouble() / preliminationCount
-
-    /**
-     * The percentage win rate of the entry in the elimination rounds.
-     */
-    val eliminationPercentage: Double
-        get() = eliminationWins.toDouble() / eliminationCount
-
-    /**
-     * The number of rounds the entry has participated in.
-     */
-    val count: Int
-        get() = preliminationCount + eliminationCount
-
-    /**
-     * The number of wins the entry has.
-     */
-    val wins: Int
-        get() = preliminationWins + eliminationWins
-
-    /**
-     * The number of losses the entry has.
-     */
-    val losses: Int
-        get() = count - wins
-
-    /**
-     * The number of prelimination losses the entry has.
-     */
-    val preliminationLosses: Int
-        get() = preliminationCount - preliminationWins
-
-    /**
-     * The number of elimination losses the entry has.
-     */
-    val eliminationLosses: Int
-        get() = eliminationCount - eliminationWins
-}
-
-/**
- * Represents the result of a tournament.
- */
-data class TournamentResult(
-    /**
-     * The name of the tournament where result is from.
-     */
-    val tournament: String,
-    /**
-     * The division of the debate for the result.
-     */
-    val division: DebateLevel,
-    /**
-     * The date of the tournament in the format "YYYY-MM-DD".
-     */
-    val date: String,
-    /**
-     * The results for the preliminary rounds.
-     */
-    val prelimination: TournamentRecord,
-    /**
-     * The results for the trial elimination round (64), or null if the entry did not participate in the round.
-     */
-    val trials: TournamentRecord?,
-    /**
-     * The results for the double elimination round (32), or null if the entry did not participate in the round.
-     */
-    val doubles: TournamentRecord?,
-    /**
-     * The results for the octofinal elimination round (16), or null if the entry did not participate in the round.
-     */
-    val octofinals: TournamentRecord?,
-    /**
-     * The results for the quarterfinal elimination round (8), or null if the entry did not participate in the round.
-     */
-    val quarterfinals: TournamentRecord?,
-    /**
-     * The results for the semifinal elimination round (4), or null if the entry did not participate in the round.
-     */
-    val semifinals: TournamentRecord?,
-    /**
-     * The results for the final elimination round (2), or null if the entry did not participate in the round.
-     */
-    val finals: TournamentRecord?
-) {
-
-    /**
-     * The total number of elimination rounds the entry has competed in.
-     */
-    val eliminations: TournamentRecord
-        get() = (trials ?: TournamentRecord.NONE) + doubles + octofinals + quarterfinals + semifinals + finals
-
-    /**
-     * The total number of rounds the entry has competed in.
-     */
-    val total: TournamentRecord
-        get() = prelimination + trials + doubles + octofinals + quarterfinals + semifinals + finals
+    override fun serialize(encoder: Encoder, value: DebateLevel) {
+        encoder.encodeString(value.name)
+    }
 }

@@ -1,86 +1,108 @@
 package xyz.gmitch215.tabroom.api
 
-/**
- * Represents a tournament record.
- *
- * For Debate, both [wins] and [losses] are used.
- *
- * For Speech, [wins] represents the current rank, and [losses] is always `-1`.
- *
- * For Congress, [wins] and [losses] are both `0`.
- */
-data class TournamentRecord(
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
+@Serializable
+data class Ballot(
     /**
-     * The number of wins the entry has.
+     * The number of ballots lost.
      */
-    val wins: Double,
+    @SerialName("ballots_lost")
+    val ballotsLost: Int = 0,
     /**
-     * The number of losses the entry has.
+     * The number of ballots won.
      */
-    val losses: Double
-) {
-
-    constructor() : this(0.0, 0.0)
-
+    @SerialName("ballots_won")
+    val ballotsWon: Int = 0,
     /**
-     * The total number of rounds the entry has competed in.
+     * The decision as a string.
      */
-    val total: Double get() = wins + losses
-
+    @SerialName("decision_str")
+    val decision: String = "L",
     /**
-     * The win percentage of the entry.
+     * Whether this round is an elimination round.
      */
-    val winPercentage: Double get() = wins.toDouble() / total
-
+    @SerialName("elim")
+    @Serializable(with = ByteToBooleanSerializer::class)
+    val isElimination: Boolean,
     /**
-     * The loss percentage of the entry.
+     * The level of the debate.
      */
-    val lossPercentage: Double get() = losses.toDouble() / total
-
+    @SerialName("event_level")
+    val level: DebateLevel = DebateLevel.OPEN,
     /**
-     * The record as a string.
-     * @return The record as a string.
+     * The name of the event.
      */
-    override fun toString(): String {
-        if (losses < 0) return "$wins"
-        return "$wins-$losses"
-    }
+    @SerialName("event_name")
+    val eventName: String = "Unknown",
+    /**
+     * The name of the judge.
+     */
+    @SerialName("judge_raw")
+    val judge: String = "Unknown",
+    /**
+     * The name of the opponent.
+     */
+    val opponent: String? = "Unknown",
+    /**
+     * The round number.
+     */
+    @SerialName("round_name")
+    val round: Int = 0,
+    /**
+     * The speaker points of the first speaker, or 0 if not available.
+     */
+    @SerialName("speaker1_pts")
+    @Serializable(with = SpeakerDeserializer::class)
+    val speaker1Points: Double = 0.0,
+    /**
+     * The speaker points of the second speaker, or 0 if not available.
+     */
+    @SerialName("speaker2_pts")
+    @Serializable(with = SpeakerDeserializer::class)
+    val speaker2Points: Double = 0.0,
+    /**
+     * The name of the tournament.
+     */
+    @SerialName("tourn")
+    val tournament: String,
+    /**
+     * The date of the tournament.
+     */
+    @SerialName("tourn_start")
+    val tournamentDate: String
+)
 
-    operator fun plus(other: TournamentRecord?): TournamentRecord {
-        return TournamentRecord(wins + (other?.wins ?: 0.0), losses + (other?.losses ?: 0.0))
-    }
+private object SpeakerDeserializer : KSerializer<Double> {
+    override val descriptor = PrimitiveSerialDescriptor("SpeakerPoints", PrimitiveKind.DOUBLE)
 
-    operator fun minus(other: TournamentRecord?): TournamentRecord {
-        return TournamentRecord(wins - (other?.wins ?: 0.0), losses - (other?.losses ?: 0.0))
-    }
-
-    companion object {
-        /**
-         * A record with no wins or losses.
-         */
-        val NONE = TournamentRecord(0.0, 0.0)
-
-        fun fromString(record: String): TournamentRecord {
-            if (record.isEmpty() || record.isBlank()) return NONE
-            if (!record.contains("-")) return NONE
-
-            val (wins, losses) = record.split("-")
-            return TournamentRecord(wins.toDouble(), losses.toDouble())
+    override fun deserialize(decoder: Decoder): Double {
+        return try {
+            decoder.decodeString().trim().toDouble()
+        } catch (e: Exception) {
+            0.0
         }
     }
 
+    override fun serialize(encoder: Encoder, value: Double) {
+        encoder.encodeDouble(value)
+    }
 }
 
-/**
- * Parses a win-loss record from a multi-judge ballot string.
- * @param record The record to parse.
- * @return The parsed record.
- */
-fun parseMultiJudge(record: String): TournamentRecord {
-    if (record.isEmpty() || record.isBlank()) return TournamentRecord.NONE
+private object ByteToBooleanSerializer : KSerializer<Boolean> {
+    override val descriptor = PrimitiveSerialDescriptor("Boolean", PrimitiveKind.BOOLEAN)
 
-    val wins = record.count { it == 'W' }
-    val losses = record.count { it == 'L' }
+    override fun deserialize(decoder: Decoder): Boolean {
+        return decoder.decodeByte() == 1.toByte()
+    }
 
-    return TournamentRecord(wins.toDouble(), losses.toDouble())
+    override fun serialize(encoder: Encoder, value: Boolean) {
+        encoder.encodeByte(if (value) 1 else 0)
+    }
 }
