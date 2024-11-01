@@ -80,7 +80,7 @@ kotlin {
         }
 
         nativeMain.dependencies {
-            implementation("com.fleeksoft.ksoup:ksoup-lite:0.1.9")
+            implementation("com.fleeksoft.ksoup:ksoup-lite:0.2.0")
         }
 
         mingwMain.dependencies {
@@ -97,7 +97,7 @@ kotlin {
 
         jsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
-            implementation("com.fleeksoft.ksoup:ksoup-lite:0.1.9")
+            implementation("com.fleeksoft.ksoup:ksoup-lite:0.2.0")
         }
     }
 }
