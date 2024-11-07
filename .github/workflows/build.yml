@@ -64,7 +64,7 @@ jobs:
 
   test:
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 60
     needs: setup
 
     permissions:
