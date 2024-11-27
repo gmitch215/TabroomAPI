@@ -70,12 +70,12 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation("org.jsoup:jsoup:1.18.1")
+            implementation("org.jsoup:jsoup:1.18.2")
             implementation("io.ktor:ktor-client-jetty:$ktorVersion")
         }
 
         androidMain.dependencies {
-            implementation("org.jsoup:jsoup:1.18.1")
+            implementation("org.jsoup:jsoup:1.18.2")
             implementation("io.ktor:ktor-client-android:$ktorVersion")
         }
 
