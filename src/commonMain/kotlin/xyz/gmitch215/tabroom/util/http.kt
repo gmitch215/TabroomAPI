@@ -18,7 +18,6 @@ internal val client
     }
 
 internal suspend fun String.fetchDocument(): Document {
-    // FIXME: Tabroom record results are loaded by JavaScript
     val res = client.get(this) {
         headers {
             append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
