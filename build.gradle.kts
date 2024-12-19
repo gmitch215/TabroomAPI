@@ -57,7 +57,7 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "3.0.2"
+        val ktorVersion = "3.0.3"
 
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
