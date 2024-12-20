@@ -70,7 +70,7 @@ jobs:
       - name: Change Permissions
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew clean assemble publishToMavenLocal
+        run: ./gradlew clean assemble publishToMavenLocal --info --stacktrace
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
