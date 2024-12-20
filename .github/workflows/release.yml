@@ -18,6 +18,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
+      - name: Set up Konan
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.konan/caches
+            ~/.konan/dependencies
+            ~/.konan/kotlin-native-prebuilt-macos-*
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-konan-
       - name: Change Permissions
         run: chmod +x ./gradlew
       - name: Publish to Repository
@@ -40,6 +50,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
+      - name: Set up Konan
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.konan/caches
+            ~/.konan/dependencies
+            ~/.konan/kotlin-native-prebuilt-macos-*
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-konan-
       - name: Change Permissions
         run: chmod +x ./gradlew
       - name: Publish to Maven Central
