@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform") version "2.1.0"
@@ -50,6 +53,21 @@ kotlin {
 
         generateTypeScriptDefinitions()
     }
+    wasmJs {
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
+        nodejs {
+            testTask {
+                enabled = false
+            }
+        }
+
+        binaries.executable()
+        generateTypeScriptDefinitions()
+    }
 
     mingwX64()
     macosX64()
@@ -68,7 +86,6 @@ kotlin {
     tvosSimulatorArm64()
     watchosArm32()
     watchosArm64()
-    watchosX64()
     watchosSimulatorArm64()
 
     sourceSets {
