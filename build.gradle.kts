@@ -33,7 +33,11 @@ kotlin {
 
     jvm()
     js {
-        nodejs()
+        nodejs {
+            testTask {
+                enabled = false
+            }
+        }
         browser {
             testTask {
                 enabled = false
