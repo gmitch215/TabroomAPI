@@ -61,10 +61,13 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build with Gradle
         run: ./gradlew clean assemble publishToMavenLocal
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.os }}
+          name: build-artifacts-${{ runner.os }}
           path: build/libs/
 
   test:
@@ -97,8 +100,6 @@ jobs:
             ${{ runner.os }}-konan-
       - name: Change Permissions
         run: chmod +x ./gradlew
-      - name: Install Firefox
-        uses: browser-actions/setup-firefox@v1
       - name: Gradle Test
         run: ./gradlew allTests jvmJacocoTestReport
       - name: Collect JaCoCo Report
@@ -191,4 +192,6 @@ jobs:
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew publish -Psnapshot=true
