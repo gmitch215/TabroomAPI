@@ -13,7 +13,7 @@ plugins {
     signing
 }
 
-val v = "0.1.1"
+val v = "0.1.2"
 
 group = "xyz.gmitch215"
 version = if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v
@@ -55,7 +55,6 @@ kotlin {
     macosX64()
     macosArm64()
     linuxX64()
-    linuxArm64()
 
     iosX64()
     iosArm64()
@@ -63,6 +62,14 @@ kotlin {
     androidTarget {
         publishAllLibraryVariants()
     }
+
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
 
     sourceSets {
         val ktorVersion = "3.0.3"
@@ -187,6 +194,7 @@ publishing {
 
     repositories {
         maven {
+            name = "CalculusGames"
             credentials {
                 username = System.getenv("NEXUS_USERNAME")
                 password = System.getenv("NEXUS_PASSWORD")
@@ -195,6 +203,18 @@ publishing {
             val releases = "https://repo.calcugames.xyz/repository/maven-releases/"
             val snapshots = "https://repo.calcugames.xyz/repository/maven-snapshots/"
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshots else releases)
+        }
+
+        if (!version.toString().endsWith("SNAPSHOT")) {
+            maven {
+                name = "GithubPackages"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+
+                url = uri("https://maven.pkg.github.com/gmitch215/TabroomAPI")
+            }
         }
     }
 }
