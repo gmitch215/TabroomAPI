@@ -1,15 +1,19 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     kotlin("multiplatform") version "2.1.0"
     kotlin("plugin.serialization") version "2.1.0"
     id("org.jetbrains.kotlin.native.cocoapods") version "2.1.0"
-    id("org.jetbrains.dokka") version "1.9.20"
+    id("org.jetbrains.dokka") version "2.0.0"
     id("com.android.library") version "8.7.3"
+    id("com.vanniktech.maven.publish") version "0.30.0"
 
     `maven-publish`
     jacoco
+    signing
 }
 
-val v = "0.1.0"
+val v = "0.1.1"
 
 group = "xyz.gmitch215"
 version = if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v
@@ -139,6 +143,10 @@ tasks {
     }
 }
 
+signing {
+    sign(publishing.publications)
+}
+
 publishing {
     publications {
         filterIsInstance<MavenPublication>().forEach {
@@ -150,6 +158,14 @@ publishing {
                         license {
                             name = "MIT License"
                             url = "https://opensource.org/licenses/MIT"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = "gmitch215"
+                            name = "Gregory Mitchell"
+                            email = "me@gmitch215.xyz"
                         }
                     }
 
@@ -175,4 +191,39 @@ publishing {
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshots else releases)
         }
     }
+}
+
+mavenPublishing {
+    coordinates(project.group.toString(), project.name, project.version.toString())
+
+    pom {
+        name.set("TabroomAPI")
+        description.set(project.description)
+        url.set("https://github.com/gmitch215/TabroomAPI")
+        inceptionYear.set("2024")
+
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+            }
+        }
+
+        developers {
+            developer {
+                id = "gmitch215"
+                name = "Gregory Mitchell"
+                email = "me@gmitch215.xyz"
+            }
+        }
+
+        scm {
+            connection = "scm:git:git://github.com/gmitch215/TabroomAPI.git"
+            developerConnection = "scm:git:ssh://github.com/gmitch215/TabroomAPI.git"
+            url = "https://github.com/gmitch215/TabroomAPI"
+        }
+    }
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
 }

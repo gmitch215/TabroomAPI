@@ -11,15 +11,6 @@ Since it does not have an official API, this repository scrapes the website to p
 
 Maven
 ```xml
-<!-- Add Calculus Games Repository -->
-
-<repositories>
-    <repository>
-        <id>calculus-games</id>
-        <url>https://repo.calcugames.xyz/repository/maven-public/</url>
-    </repository>
-</repositories>
-
 <dependencies>
     <dependency>
         <groupId>xyz.gmitch215</groupId>
@@ -31,11 +22,6 @@ Maven
 
 Gradle (Groovy)
 ```groovy
-// Add Calculus Games Repository
-repositories {
-    maven { url 'https://repo.calcugames.xyz/repository/maven-public/' }
-}
-
 dependencies {
     implementation 'xyz.gmitch215:tabroom-api:[VERSION]'
 }
@@ -43,11 +29,6 @@ dependencies {
 
 Gradle (Kotlin DSL)
 ```kts
-// Add Calculus Games Repository
-repositories {
-    maven("https://repo.calcugames.xyz/repository/maven-public/")
-}
-
 dependencies {
     implementation("xyz.gmitch215:tabroom-api:[VERSION]")
 }
