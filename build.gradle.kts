@@ -117,7 +117,18 @@ kotlin {
 
         nativeMain.dependencies {
             implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
-            implementation("io.ktor:ktor-client-cio:$ktorVersion")
+        }
+
+        mingwMain.dependencies {
+            implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
+        }
+
+        appleMain.dependencies {
+            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+        }
+
+        linuxMain.dependencies {
+            implementation("io.ktor:ktor-client-curl:3.0.2")
         }
 
         jsMain.dependencies {
