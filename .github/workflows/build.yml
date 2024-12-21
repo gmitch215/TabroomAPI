@@ -206,10 +206,17 @@ jobs:
             ${{ runner.os }}-konan-
       - name: Change Permissions
         run: chmod +x ./gradlew
-      - name: Publish to Repository
+      - name: Publish to Calculus Games
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publishAllPublicationsToMavenRepository -Psnapshot=true
+        run: ./gradlew publishAllPublicationsToCalculusGamesRepository -Psnapshot=true
+      - name: Publish to GitHub Packages
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository -Psuffix=${GITHUB_SHA::7}

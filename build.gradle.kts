@@ -2,8 +2,6 @@
 
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform") version "2.1.0"
@@ -21,7 +19,7 @@ plugins {
 val v = "0.1.2"
 
 group = "xyz.gmitch215"
-version = if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v
+version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
 description = "Multiplatform API for Tabroom.com"
 
 repositories {
