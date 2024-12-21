@@ -117,7 +117,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: build/reports/tests/test/
+          path: build/reports/tests/
       - name: Collect JaCoCo Report
         if: ${{ github.event_name != 'pull_request' }}
         id: jacoco_reporter
