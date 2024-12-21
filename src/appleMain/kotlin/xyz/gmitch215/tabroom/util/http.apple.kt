@@ -12,4 +12,9 @@ internal actual val engine: HttpClientEngine = Darwin.create {
     configureRequest {
         setAllowsCellularAccess(true)
     }
+
+    configureSession {
+        setAllowsCellularAccess(true)
+        TLSMinimumSupportedProtocol = platform.Security.tls_protocol_version_TLSv10.toInt()
+    }
 }

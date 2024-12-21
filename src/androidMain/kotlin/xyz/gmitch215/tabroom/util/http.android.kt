@@ -7,4 +7,5 @@ import kotlinx.coroutines.Dispatchers
 internal actual val engine: HttpClientEngine = Android.create {
     pipelining = true
     dispatcher = Dispatchers.IO.limitedParallelism(PARALLEL_COUNT)
+    connectTimeout = 0
 }
