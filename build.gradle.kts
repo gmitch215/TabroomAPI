@@ -16,7 +16,7 @@ plugins {
     signing
 }
 
-val v = "0.1.2"
+val v = "0.1.3"
 
 group = "xyz.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
@@ -40,29 +40,42 @@ kotlin {
 
     jvm()
     js {
-        nodejs {
-            testTask {
-                enabled = false
-            }
-        }
         browser {
             testTask {
-                enabled = false
+                useMocha {
+                    timeout = "10m"
+                }
             }
         }
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "10m"
+                }
+            }
 
+            useCommonJs()
+        }
+
+        binaries.executable()
         generateTypeScriptDefinitions()
     }
     wasmJs {
         browser {
             testTask {
-                enabled = false
+                useMocha {
+                    timeout = "10m"
+                }
             }
         }
         nodejs {
             testTask {
-                enabled = false
+                useMocha {
+                    timeout = "10m"
+                }
             }
+
+            useCommonJs()
         }
 
         binaries.executable()
@@ -121,13 +134,15 @@ kotlin {
             implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
         }
 
-        appleMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
-        }
+        val posixMain by creating {
+            dependsOn(commonMain.get())
 
-        linuxMain.dependencies {
-            implementation("io.ktor:ktor-client-curl:3.0.2")
+            dependencies {
+                implementation("io.ktor:ktor-client-cio:$ktorVersion")
+                implementation("io.ktor:ktor-network-tls:$ktorVersion")
+            }
         }
+        listOf(appleMain, linuxMain).forEach { it.get().dependsOn(posixMain) }
 
         jsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
