@@ -2,6 +2,8 @@
 
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform") version "2.1.0"
@@ -90,6 +92,7 @@ kotlin {
 
     sourceSets {
         val ktorVersion = "3.0.3"
+        val ksoupVersion = "0.2.0"
 
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
@@ -113,7 +116,7 @@ kotlin {
         }
 
         nativeMain.dependencies {
-            implementation("com.fleeksoft.ksoup:ksoup-lite:0.2.0")
+            implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
         }
 
         mingwMain.dependencies {
@@ -130,7 +133,12 @@ kotlin {
 
         jsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
-            implementation("com.fleeksoft.ksoup:ksoup-lite:0.2.0")
+            implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
+        }
+
+        wasmJsMain.dependencies {
+            implementation("io.ktor:ktor-client-js:$ktorVersion")
+            implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
         }
     }
 }
