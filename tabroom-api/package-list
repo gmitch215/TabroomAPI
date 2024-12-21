@@ -61,4 +61,7 @@ $dokka.location:xyz.gmitch215.tabroom.api/Tournament/judges/#/PointingToDeclarat
 $dokka.location:xyz.gmitch215.tabroom.api/Tournament/location/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-tournament/location.html
 $dokka.location:xyz.gmitch215.tabroom.api/Tournament/name/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-tournament/name.html
 $dokka.location:xyz.gmitch215.tabroom.api/Tournament/year/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-tournament/year.html
+$dokka.location:xyz.gmitch215.tabroom.util////PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.util/index.html
+$dokka.location:xyz.gmitch215.tabroom.util//closeClient/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.util/close-client.html
 xyz.gmitch215.tabroom.api
+xyz.gmitch215.tabroom.util
