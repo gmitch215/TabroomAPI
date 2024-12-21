@@ -63,7 +63,7 @@ jobs:
           path: |
             ~/.konan/caches
             ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
+            ~/.konan/kotlin-native-prebuilt-*
           key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
           restore-keys: |
             ${{ runner.os }}-konan-
