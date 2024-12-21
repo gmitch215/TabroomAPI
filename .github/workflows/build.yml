@@ -112,6 +112,12 @@ jobs:
         run: chmod +x ./gradlew
       - name: Gradle Test
         run: ./gradlew allTests jvmJacocoTestReport
+      - name: Archive Test Reports
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test/
       - name: Collect JaCoCo Report
         if: ${{ github.event_name != 'pull_request' }}
         id: jacoco_reporter
