@@ -3,11 +3,12 @@ package xyz.gmitch215.tabroom.api
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.minutes
 
 class TestFetcher {
 
     @Test
-    fun testTournament() = runTest {
+    fun testTournament() = runTest(timeout = 3.minutes) {
         // Jack Howe 2024
         val t1 = getTournament(31822)
 
