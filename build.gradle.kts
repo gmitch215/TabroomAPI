@@ -120,10 +120,6 @@ kotlin {
             implementation("io.ktor:ktor-client-cio:$ktorVersion")
         }
 
-        mingwMain.dependencies {
-            implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
-        }
-
         jsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
             implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
