@@ -31,3 +31,8 @@ internal suspend fun String.fetchDocument(): Document {
     val text = res.bodyAsText(Charsets.UTF_8)
     return Document(this, text)
 }
+
+/**
+ * Closes the client. This should be called when the API is no longer needed.
+ */
+fun closeClient() = client.close()
