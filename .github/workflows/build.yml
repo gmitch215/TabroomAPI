@@ -77,7 +77,15 @@ jobs:
             ${{ runner.os }}-konan-
       - name: Install Linux Dependencies
         if: ${{ runner.os == 'Linux' }}
-        run: sudo apt-get install libcurl4-gnutls-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install libcurl4-gnutls-dev
+      - name: Install Windows Dependencies
+        if: ${{ runner.os == 'Windows' }}
+        run: choco install curl
+      - name: Install macOS Dependencies
+        if: ${{ runner.os == 'macOS' }}
+        run: brew install curl
       - name: Change Permissions
         run: chmod +x ./gradlew
       - name: Build with Gradle
@@ -123,6 +131,8 @@ jobs:
             ${{ runner.os }}-konan-
       - name: Change Permissions
         run: chmod +x ./gradlew
+      - name: Install Dependencies
+        run: brew install curl
       - name: Gradle Test
         run: ./gradlew allTests jvmJacocoTestReport
       - name: Archive Test Reports
