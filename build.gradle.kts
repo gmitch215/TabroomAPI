@@ -134,15 +134,13 @@ kotlin {
             implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
         }
 
-        val posixMain by creating {
-            dependsOn(commonMain.get())
-
-            dependencies {
-                implementation("io.ktor:ktor-client-cio:$ktorVersion")
-                implementation("io.ktor:ktor-network-tls:$ktorVersion")
-            }
+        appleMain.dependencies {
+            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
         }
-        listOf(appleMain, linuxMain).forEach { it.get().dependsOn(posixMain) }
+
+        linuxMain.dependencies {
+            implementation("io.ktor:ktor-client-curl:3.0.2")
+        }
 
         jsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
