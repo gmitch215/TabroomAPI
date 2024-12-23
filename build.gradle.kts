@@ -139,7 +139,7 @@ kotlin {
         }
 
         linuxMain.dependencies {
-            implementation("io.ktor:ktor-client-curl:3.0.2")
+            implementation("io.ktor:ktor-client-curl:3.0.3")
         }
 
         jsMain.dependencies {
