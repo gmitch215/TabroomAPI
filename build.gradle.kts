@@ -89,17 +89,14 @@ kotlin {
 
     iosX64()
     iosArm64()
-    iosSimulatorArm64()
     androidTarget {
         publishAllLibraryVariants()
     }
 
     tvosArm64()
     tvosX64()
-    tvosSimulatorArm64()
     watchosArm32()
     watchosArm64()
-    watchosSimulatorArm64()
 
     sourceSets {
         val ktorVersion = "3.0.3"
