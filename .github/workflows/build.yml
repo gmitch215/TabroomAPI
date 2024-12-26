@@ -75,17 +75,6 @@ jobs:
           key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
           restore-keys: |
             ${{ runner.os }}-konan-
-      - name: Install Linux Dependencies
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install libcurl4-gnutls-dev
-      - name: Install Windows Dependencies
-        if: ${{ runner.os == 'Windows' }}
-        run: choco install curl
-      - name: Install macOS Dependencies
-        if: ${{ runner.os == 'macOS' }}
-        run: brew install curl
       - name: Change Permissions
         run: chmod +x ./gradlew
       - name: Build with Gradle
