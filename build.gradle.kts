@@ -99,7 +99,7 @@ kotlin {
     watchosArm64()
 
     sourceSets {
-        val ktorVersion = "3.0.3"
+        val ktorVersion = "3.1.0"
         val ksoupVersion = "0.2.0"
 
         commonMain.dependencies {
