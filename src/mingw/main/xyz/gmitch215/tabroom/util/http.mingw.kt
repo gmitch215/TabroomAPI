@@ -5,6 +5,7 @@ import io.ktor.client.engine.winhttp.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import xyz.gmitch215.tabroom.util.PARALLEL_COUNT
 
 internal actual val engine: HttpClientEngine = WinHttp.create {
     pipelining = true
