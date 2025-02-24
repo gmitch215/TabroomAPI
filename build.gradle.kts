@@ -2,14 +2,16 @@
 
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
     kotlin("multiplatform") version "2.1.10"
     kotlin("plugin.serialization") version "2.1.10"
     id("org.jetbrains.kotlin.native.cocoapods") version "2.1.10"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.android.library") version "8.8.0"
+    id("com.android.library") version "8.7.3"
     id("com.vanniktech.maven.publish") version "0.30.0"
+    id("dev.petuska.npm.publish") version "3.5.3"
 
     `maven-publish`
     jacoco
@@ -20,7 +22,8 @@ val v = "0.1.3"
 
 group = "xyz.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
-description = "Multiplatform API for Tabroom.com"
+val desc = "Multiplatform API for Tabroom.com"
+description = desc
 
 repositories {
     google()
@@ -35,6 +38,7 @@ java {
 }
 
 kotlin {
+    configureSourceSets()
     applyDefaultHierarchyTemplate()
     withSourcesJar()
 
@@ -46,18 +50,11 @@ kotlin {
                     timeout = "10m"
                 }
             }
-        }
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10m"
-                }
-            }
 
             useCommonJs()
         }
 
-        binaries.executable()
+        binaries.library()
         generateTypeScriptDefinitions()
     }
     wasmJs {
@@ -67,18 +64,11 @@ kotlin {
                     timeout = "10m"
                 }
             }
-        }
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "10m"
-                }
-            }
 
             useCommonJs()
         }
 
-        binaries.executable()
+        binaries.library()
         generateTypeScriptDefinitions()
     }
 
@@ -151,6 +141,26 @@ kotlin {
     }
 }
 
+fun KotlinMultiplatformExtension.configureSourceSets() {
+    sourceSets
+        .matching { it.name !in listOf("main", "test") }
+        .all {
+            val srcDir = if ("Test" in name) "test" else "main"
+            val resourcesPrefix = if (name.endsWith("Test")) "test-" else ""
+            val platform = when {
+                (name.endsWith("Main") || name.endsWith("Test")) && "android" !in name -> name.dropLast(4)
+                else -> name.substringBefore(name.first { it.isUpperCase() })
+            }
+
+            kotlin.srcDir("src/$platform/$srcDir")
+            resources.srcDir("src/$platform/${resourcesPrefix}resources")
+
+            languageSettings.apply {
+                progressiveMode = true
+            }
+        }
+}
+
 android {
     compileSdk = 33
     namespace = "xyz.gmitch215.tabroomapi"
@@ -166,7 +176,7 @@ tasks {
         delete("kotlin-js-store")
     }
 
-    create("jvmJacocoTestReport", JacocoReport::class) {
+    register("jvmJacocoTestReport", JacocoReport::class) {
         dependsOn("jvmTest")
 
         classDirectories.setFrom(layout.buildDirectory.file("classes/kotlin/jvm/"))
@@ -257,7 +267,7 @@ mavenPublishing {
 
     pom {
         name.set("TabroomAPI")
-        description.set(project.description)
+        description.set(desc)
         url.set("https://github.com/gmitch215/TabroomAPI")
         inceptionYear.set("2024")
 
@@ -285,4 +295,53 @@ mavenPublishing {
 
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, true)
     signAllPublications()
+}
+
+npmPublish {
+    readme = file("README.md")
+
+    packages.forEach {
+        it.packageJson {
+            name = "@gmitch215/${project.name}"
+            version = project.version.toString()
+            description = desc
+            license = "MIT"
+            homepage = "https://github.com/gmitch215/TabroomAPI"
+
+            types = "${project.name}.d.ts"
+
+            author {
+                name = "Gregory Mitchell"
+                email = "me@gmitch215.xyz"
+            }
+
+            repository {
+                type = "git"
+                url = "git+https://github.com/gmitch215/TabroomAPI.git"
+            }
+
+            keywords = listOf("tabroom", "api", "kotlin", "multiplatform")
+        }
+    }
+
+    registries {
+        register("npmjs") {
+            uri.set("https://registry.npmjs.org")
+            authToken.set(System.getenv("NPM_TOKEN"))
+        }
+
+        register("GithubPackages") {
+            uri.set("https://npm.pkg.github.com/gmitch215")
+            authToken.set(System.getenv("GITHUB_TOKEN"))
+        }
+
+        register("CalculusGames") {
+            val releases = "https://repo.calcugames.xyz/repository/npm-releases"
+            val snapshots = "https://repo.calcugames.xyz/repository/npm-snapshots"
+
+            uri.set(if (project.version.toString().endsWith("SNAPSHOT")) snapshots else releases)
+            username.set(System.getenv("NEXUS_USERNAME"))
+            password.set(System.getenv("NEXUS_PASSWORD"))
+        }
+    }
 }
