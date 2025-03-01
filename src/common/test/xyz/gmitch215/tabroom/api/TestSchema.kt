@@ -23,8 +23,7 @@ class TestSchema {
             speaker1Points = 28.0,
             speaker2Points = 27.5,
             tournament = "Tournament Name",
-            tournamentDate = "2023-10-01",
-            tournamentStart = 12345L,
+            tournamentDate = "2023-10-01"
         )
 
         assertTrue(ballot.ballotsLost == 1)
@@ -42,7 +41,6 @@ class TestSchema {
         assertTrue(ballot.speaker2Points == 27.5)
         assertTrue(ballot.tournament == "Tournament Name")
         assertTrue(ballot.tournamentDate == "2023-10-01")
-        assertTrue(ballot.tournamentStart == 12345L)
 
         assertTrue(ballot.isWin)
     }

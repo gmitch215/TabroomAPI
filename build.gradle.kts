@@ -57,20 +57,6 @@ kotlin {
         binaries.library()
         generateTypeScriptDefinitions()
     }
-    wasmJs {
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "10m"
-                }
-            }
-
-            useCommonJs()
-        }
-
-        binaries.library()
-        generateTypeScriptDefinitions()
-    }
 
     mingwX64()
     macosX64()

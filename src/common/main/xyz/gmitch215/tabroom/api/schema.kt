@@ -1,18 +1,23 @@
+@file:OptIn(ExperimentalJsExport::class)
+
 package xyz.gmitch215.tabroom.api
 
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.ExperimentalJsStatic
+import kotlin.js.JsExport
+import kotlin.js.JsStatic
 
 /**
  * Represents a tournament.
  */
+@JsExport
 data class Tournament(
     /**
      * The name of the tournament.
@@ -47,6 +52,7 @@ data class Tournament(
 /**
  * Represents an event in a tournament.
  */
+@JsExport
 data class Event(
     /**
      * The name of the event.
@@ -69,6 +75,7 @@ data class Event(
 /**
  * Represents an entry inside a tournament event.
  */
+@JsExport
 data class Entry(
     /**
      * The name of the school the entry is from.
@@ -95,6 +102,7 @@ data class Entry(
 /**
  * Represents a Judge in a tournament.
  */
+@JsExport
 data class Judge(
     /**
      * The first name of the judge.
@@ -123,6 +131,7 @@ data class Judge(
 /**
  * The level of a debate.
  */
+@JsExport
 @Serializable(with = DebateLevelSerializer::class)
 enum class DebateLevel {
     /**
@@ -166,6 +175,8 @@ enum class DebateLevel {
          * @param string The string to convert.
          * @return The [DebateLevel] that corresponds to the string, or null if the string does not match any level.
          */
+        @OptIn(ExperimentalJsStatic::class)
+        @JsStatic
         fun fromString(string: String): DebateLevel? {
             val lower = string.lowercase()
             return entries.firstOrNull { it.aliases.contains(lower) }
@@ -192,6 +203,7 @@ object DebateLevelSerializer : KSerializer<DebateLevel> {
 /**
  * Represents the side of a debate.
  */
+@JsExport
 @Serializable(with = DebateSideSerializer::class)
 enum class DebateSide {
     /**
@@ -216,6 +228,8 @@ enum class DebateSide {
          * @param string The string to convert.
          * @return The [DebateSide] that corresponds to the string, or null if the string does not match any side.
          */
+        @OptIn(ExperimentalJsStatic::class)
+        @JsStatic
         fun fromString(string: String): DebateSide {
             return when (string.lowercase()) {
                 "affirmative", "aff", "pro" -> AFFIRMATIVE
@@ -242,6 +256,10 @@ object DebateSideSerializer : KSerializer<DebateSide> {
     }
 }
 
+/**
+ * Represents a ballot in a debate.
+ */
+@JsExport
 @Serializable
 data class Ballot(
     /**
@@ -344,11 +362,6 @@ data class Ballot(
      */
     @SerialName("tourn_start")
     val tournamentDate: String,
-    /**
-     * The start time of the tournament in epoch milliseconds.
-     */
-    @SerialName("tourn_epoch")
-    val tournamentStart: Long,
     /**
      * Whether this ballot was submitted this year.
      */

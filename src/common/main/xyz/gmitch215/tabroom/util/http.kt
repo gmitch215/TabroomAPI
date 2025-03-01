@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalJsExport::class)
+
 package xyz.gmitch215.tabroom.util
 
 import io.ktor.client.*
@@ -8,6 +10,8 @@ import io.ktor.http.*
 import io.ktor.utils.io.charsets.*
 import kotlinx.io.IOException
 import xyz.gmitch215.tabroom.util.html.Document
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
 internal const val PARALLEL_COUNT = 16
 internal expect val engine: HttpClientEngine
@@ -40,9 +44,11 @@ internal suspend fun String.fetchDocument(): Document {
 /**
  * Closes the client. This should be called when the API is no longer needed.
  */
+@JsExport
 fun closeClient() = client.close()
 
 /**
  * Clears the document cache.
  */
+@JsExport
 fun clearCache() = cache.clear()

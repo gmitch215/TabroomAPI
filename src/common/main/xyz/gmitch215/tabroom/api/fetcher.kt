@@ -3,17 +3,15 @@ package xyz.gmitch215.tabroom.api
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import xyz.gmitch215.tabroom.util.TabroomUrls
-import xyz.gmitch215.tabroom.util.fetchDocument
-import xyz.gmitch215.tabroom.util.getAllJudges
-import xyz.gmitch215.tabroom.util.getEvents
-import xyz.gmitch215.tabroom.util.getTournament
+import xyz.gmitch215.tabroom.util.*
+import kotlin.js.JsName
 
 /**
  * Gets a tournament by its ID.
  * @param id The ID of the tournament.
  * @return The tournament.
  */
+@JsName("getTournamentAsync")
 suspend fun getTournament(id: Int): Tournament = coroutineScope {
     val urls = TabroomUrls(id)
 
