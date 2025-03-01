@@ -17,7 +17,11 @@ internal val client
         expectSuccess = false
     }
 
+internal val cache = mutableMapOf<String, Document>()
+
 internal suspend fun String.fetchDocument(): Document {
+    if (this in cache) return cache[this]!!
+
     val res = client.get(this) {
         headers {
             append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
@@ -29,6 +33,7 @@ internal suspend fun String.fetchDocument(): Document {
     }
 
     val text = res.bodyAsText(Charsets.UTF_8)
+    cache[this] = Document(this, text)
     return Document(this, text)
 }
 
@@ -36,3 +41,8 @@ internal suspend fun String.fetchDocument(): Document {
  * Closes the client. This should be called when the API is no longer needed.
  */
 fun closeClient() = client.close()
+
+/**
+ * Clears the document cache.
+ */
+fun clearCache() = cache.clear()

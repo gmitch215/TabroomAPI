@@ -17,6 +17,7 @@ import xyz.gmitch215.tabroom.util.html.querySelectorAll
 
 private val json = Json {
     ignoreUnknownKeys = true
+    isLenient = true
 }
 
 internal const val TOURNAMENT_NAME_SELECTOR = "div.main.index > h2.centeralign.marno"
@@ -44,22 +45,22 @@ internal suspend fun getEvents(entries: Document, events: Document): List<Event>
 
     val eventList = mutableListOf<Event>()
 
-    launch {
+    coroutineScope {
         for (link in eventLinks) {
             val name = link.textContent
             val eventHref = link.attributes["href"] ?: continue
 
             launch {
-                val eventDoc = "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument()
+                val eventDoc = async { "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument() }
 
                 val entryHref = entryLinks.firstOrNull { it.textContent == name }?.attributes["href"]
-                val entryDoc = entryHref?.let { "https://www.tabroom.com$it".fetchDocument() }
+                val entryDoc = async { entryHref?.let { "https://www.tabroom.com$it".fetchDocument() } }
 
-                val event = getEvent(name, entryDoc, eventDoc)
+                val event = getEvent(name, entryDoc.await(), eventDoc.await())
                 eventList.add(event)
             }
         }
-    }.join()
+    }
 
     return@coroutineScope eventList
 }
@@ -73,7 +74,7 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
     val entries = mutableListOf<Entry>()
 
     if (entry != null) {
-        launch {
+        coroutineScope {
             val rows = entry.querySelectorAll(ROW_SELECTOR)
 
             for (row in rows) {
@@ -101,7 +102,7 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
                     entries.add(entry)
                 }
             }
-        }.join()
+        }
     }
 
     val event = events.querySelectorAll(EVENT_INFO_SELECTOR).first { it.textContent == name }
@@ -115,7 +116,7 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
         val keys = eventDoc.querySelectorAll(EVENT_INFO_KEY_SELECTOR)
         val values = eventDoc.querySelectorAll(EVENT_INFO_VALUE_SELECTOR)
 
-        id to keys.zip(values).map { (key, value) -> key.textContent to value.textContent }.toMap()
+        id to keys.zip(values).associate { (key, value) -> key.textContent to value.textContent }
     }
 
     val (id, fields) = fieldsId.await()
@@ -130,16 +131,17 @@ internal suspend fun getAllJudges(root: Document): Map<String, List<Judge>> = co
     val judgeLinks = root.querySelectorAll(JUDGES_LIST_SELECTOR)
     val judgeLists = root.querySelectorAll(JUDGES_LINK_SELECTOR)
 
-    launch {
+    coroutineScope {
         for ((i, link) in judgeLinks.withIndex())
             launch {
                 val type = link.children[0].textContent
                 val listLink = judgeLists[i].attributes["href"] ?: return@launch
-                val doc = "https://www.tabroom.com/$listLink".fetchDocument()
-                
+                if (listLink.contains("paradigms")) return@launch
+
+                val doc = "https://www.tabroom.com$listLink".fetchDocument()
                 judges.put(type, getJudges(doc))
             }
-    }.join()
+    }
 
     return@coroutineScope judges
 }
@@ -167,13 +169,15 @@ internal suspend fun getRecord(doc: Document, isDouble: Boolean): Map<Int, Ballo
     val map = mutableMapOf<Int, Ballot>()
     val data = json.decodeFromString<JsonObject>(doc.html.substringAfter("var panels = ").substringBefore(";").trim())
 
-    for ((id, ballotJson) in data.entries) {
-        if (ballotJson !is JsonObject) continue
-        if (ballotJson.isEmpty()) continue
+    coroutineScope {
+        for ((id, ballotJson) in data.entries) {
+            if (ballotJson !is JsonObject) continue
+            if (ballotJson.isEmpty()) continue
 
-        launch {
-            val ballot = json.decodeFromJsonElement<Ballot>(ballotJson)
-            map.put(id.toInt(), ballot)
+            launch {
+                val ballot = json.decodeFromJsonElement<Ballot>(ballotJson)
+                map.put(id.toInt(), ballot)
+            }
         }
     }
 
