@@ -2,8 +2,9 @@ $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:xyz.gmitch215.tabroom.api////PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/index.html
 $dokka.location:xyz.gmitch215.tabroom.api//getTournament/#kotlin.Int/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/get-tournament.html
+$dokka.location:xyz.gmitch215.tabroom.api//getTournamentAsPromise/#kotlin.Int/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/get-tournament-as-promise.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot///PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/index.html
-$dokka.location:xyz.gmitch215.tabroom.api/Ballot/Ballot/#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.String#kotlin.Boolean#xyz.gmitch215.tabroom.api.DebateLevel#kotlin.String#kotlin.String#xyz.gmitch215.tabroom.api.DebateSide#kotlin.String?#kotlin.Int#kotlin.Any#kotlin.Double#kotlin.Double#kotlin.String#kotlin.String#kotlin.Long#kotlin.Boolean/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/-ballot.html
+$dokka.location:xyz.gmitch215.tabroom.api/Ballot/Ballot/#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.String#kotlin.Boolean#xyz.gmitch215.tabroom.api.DebateLevel#kotlin.String#kotlin.String#xyz.gmitch215.tabroom.api.DebateSide#kotlin.String?#kotlin.Int#kotlin.Any#kotlin.Double#kotlin.Double#kotlin.String#kotlin.String#kotlin.Boolean/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/-ballot.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/ballotsCount/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/ballots-count.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/ballotsLost/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/ballots-lost.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/ballotsWon/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/ballots-won.html
@@ -22,7 +23,6 @@ $dokka.location:xyz.gmitch215.tabroom.api/Ballot/speaker1Points/#/PointingToDecl
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/speaker2Points/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/speaker2-points.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/tournament/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/tournament.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/tournamentDate/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/tournament-date.html
-$dokka.location:xyz.gmitch215.tabroom.api/Ballot/tournamentStart/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/tournament-start.html
 $dokka.location:xyz.gmitch215.tabroom.api/DebateLevel.Companion///PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-debate-level/-companion/index.html
 $dokka.location:xyz.gmitch215.tabroom.api/DebateLevel.Companion/fromString/#kotlin.String/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-debate-level/-companion/from-string.html
 $dokka.location:xyz.gmitch215.tabroom.api/DebateLevel.JV///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}tabroom-api/xyz.gmitch215.tabroom.api/-debate-level/-j-v/index.html
