@@ -18,7 +18,7 @@ plugins {
     signing
 }
 
-val v = "0.1.4"
+val v = "0.2.0"
 
 group = "xyz.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
@@ -180,7 +180,7 @@ tasks {
         dependsOn("jvmTest")
 
         classDirectories.setFrom(layout.buildDirectory.file("classes/kotlin/jvm/"))
-        sourceDirectories.setFrom("src/commonMain/kotlin/", "src/jvmMain/kotlin/")
+        sourceDirectories.setFrom("src/common/main/", "src/jvm/main/")
         executionData.setFrom(layout.buildDirectory.files("jacoco/jvmTest.exec"))
 
         reports {
