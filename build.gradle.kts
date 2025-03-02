@@ -18,7 +18,7 @@ plugins {
     signing
 }
 
-val v = "0.2.0"
+val v = "0.2.1"
 
 group = "xyz.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
@@ -116,11 +116,6 @@ kotlin {
         }
 
         jsMain.dependencies {
-            implementation("io.ktor:ktor-client-js:$ktorVersion")
-            implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
-        }
-
-        wasmJsMain.dependencies {
             implementation("io.ktor:ktor-client-js:$ktorVersion")
             implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
         }
