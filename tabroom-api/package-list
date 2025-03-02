@@ -3,6 +3,7 @@ $dokka.linkExtension:html
 $dokka.location:xyz.gmitch215.tabroom.api////PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/index.html
 $dokka.location:xyz.gmitch215.tabroom.api//getTournament/#kotlin.Int/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/get-tournament.html
 $dokka.location:xyz.gmitch215.tabroom.api//getTournamentAsPromise/#kotlin.Int/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/get-tournament-as-promise.html
+$dokka.location:xyz.gmitch215.tabroom.api//getTournamentSync/#kotlin.Int/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/get-tournament-sync.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot///PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/index.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/Ballot/#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.String#kotlin.Boolean#xyz.gmitch215.tabroom.api.DebateLevel#kotlin.String#kotlin.String#xyz.gmitch215.tabroom.api.DebateSide#kotlin.String?#kotlin.Int#kotlin.Any#kotlin.Double#kotlin.Double#kotlin.String#kotlin.String#kotlin.Boolean/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/-ballot.html
 $dokka.location:xyz.gmitch215.tabroom.api/Ballot/ballotsCount/#/PointingToDeclaration/tabroom-api/xyz.gmitch215.tabroom.api/-ballot/ballots-count.html
