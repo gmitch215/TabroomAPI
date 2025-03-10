@@ -13,6 +13,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalJsStatic
 import kotlin.js.JsExport
 import kotlin.js.JsStatic
+import kotlin.jvm.JvmStatic
 
 /**
  * Represents a tournament.
@@ -177,6 +178,7 @@ enum class DebateLevel {
          */
         @OptIn(ExperimentalJsStatic::class)
         @JsStatic
+        @JvmStatic
         fun fromString(string: String): DebateLevel? {
             val lower = string.lowercase()
             return entries.firstOrNull { it.aliases.contains(lower) }
@@ -230,6 +232,7 @@ enum class DebateSide {
          */
         @OptIn(ExperimentalJsStatic::class)
         @JsStatic
+        @JvmStatic
         fun fromString(string: String): DebateSide {
             return when (string.lowercase()) {
                 "affirmative", "aff", "pro" -> AFFIRMATIVE
