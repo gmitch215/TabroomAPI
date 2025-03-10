@@ -18,7 +18,7 @@ plugins {
     signing
 }
 
-val v = "0.2.1"
+val v = "0.3.0"
 
 group = "xyz.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
