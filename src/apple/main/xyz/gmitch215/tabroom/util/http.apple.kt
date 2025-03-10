@@ -4,7 +4,7 @@ import io.ktor.client.engine.*
 import io.ktor.client.engine.darwin.*
 import kotlinx.coroutines.Dispatchers
 
-actual val engine: HttpClientEngine = Darwin.create {
+internal actual val engine: HttpClientEngine = Darwin.create {
     pipelining = true
     dispatcher = Dispatchers.Default
 
