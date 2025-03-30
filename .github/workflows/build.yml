@@ -117,8 +117,6 @@ jobs:
             ${{ runner.os }}-konan
       - name: Change Permissions
         run: chmod +x ./gradlew
-      - name: Install Dependencies
-        run: brew install curl
       - name: Gradle Test
         run: ./gradlew allTests jvmJacocoTestReport
       - name: Archive Test Reports
