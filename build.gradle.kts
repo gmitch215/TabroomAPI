@@ -5,11 +5,11 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
-    kotlin("multiplatform") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
-    id("org.jetbrains.kotlin.native.cocoapods") version "2.1.10"
+    kotlin("multiplatform") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
+    id("org.jetbrains.kotlin.native.cocoapods") version "2.1.20"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.android.library") version "8.9.0"
+    id("com.android.library") version "8.7.3"
     id("com.vanniktech.maven.publish") version "0.31.0"
     id("dev.petuska.npm.publish") version "3.5.3"
 
@@ -20,7 +20,7 @@ plugins {
 
 val v = "0.3.0"
 
-group = "xyz.gmitch215"
+group = "dev.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
 val desc = "Multiplatform API for Tabroom.com"
 description = desc
@@ -75,7 +75,7 @@ kotlin {
     watchosArm64()
 
     sourceSets {
-        val ktorVersion = "3.1.1"
+        val ktorVersion = "3.1.2"
         val ksoupVersion = "0.2.0"
 
         commonMain.dependencies {
@@ -144,7 +144,7 @@ fun KotlinMultiplatformExtension.configureSourceSets() {
 
 android {
     compileSdk = 33
-    namespace = "xyz.gmitch215.tabroomapi"
+    namespace = "dev.gmitch215.tabroomapi"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

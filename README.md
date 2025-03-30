@@ -13,7 +13,7 @@ Maven
 ```xml
 <dependencies>
     <dependency>
-        <groupId>xyz.gmitch215</groupId>
+        <groupId>dev.gmitch215</groupId>
         <artifactId>tabroom-api</artifactId>
         <version>[VERSION]</version>
     </dependency>
@@ -23,14 +23,14 @@ Maven
 Gradle (Groovy)
 ```groovy
 dependencies {
-    implementation 'xyz.gmitch215:tabroom-api:[VERSION]'
+    implementation 'dev.gmitch215:tabroom-api:[VERSION]'
 }
 ```
 
 Gradle (Kotlin DSL)
 ```kts
 dependencies {
-    implementation("xyz.gmitch215:tabroom-api:[VERSION]")
+    implementation("dev.gmitch215:tabroom-api:[VERSION]")
 }
 ```
 
@@ -42,10 +42,10 @@ npm install @gmitch215/tabroom-api
 ## Usage
 
 ```kotlin
-import xyz.gmitch215.tabroom.api.getTournament
-import xyz.gmitch215.tabroom.api.Entry
-import xyz.gmitch215.tabroom.api.Event
-import xyz.gmitch215.tabroom.api.Tournament
+import dev.gmitch215.tabroom.api.getTournament
+import dev.gmitch215.tabroom.api.Entry
+import dev.gmitch215.tabroom.api.Event
+import dev.gmitch215.tabroom.api.Tournament
 
 fun main() {
     val tourney = getTournament(30082) // IDC Varsity State Championships 2024
@@ -69,10 +69,10 @@ fun main() {
 
 ```java
 
-import xyz.gmitch215.tabroom.api.Entry;
-import xyz.gmitch215.tabroom.api.Event;
-import xyz.gmitch215.tabroom.api.TabroomAPI;
-import xyz.gmitch215.tabroom.api.Tournament;
+import dev.gmitch215.tabroom.api.Entry;
+import dev.gmitch215.tabroom.api.Event;
+import dev.gmitch215.tabroom.api.TabroomAPI;
+import dev.gmitch215.tabroom.api.Tournament;
 
 public class Main {
     public static void main(String[] args) {
@@ -100,7 +100,7 @@ public class Main {
 ```js
 import * as tabroom from '@gmitch215/tabroom-api';
 
-tabroom.xyz.gmitch215.tabroom.api.getTournament(30082)
+tabroom.dev.gmitch215.tabroom.api.getTournament(30082)
     .then(tournament => {
         console.log(tournament.description);
         tournament.events.forEach(event => {
