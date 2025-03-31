@@ -48,13 +48,13 @@ internal suspend fun getEvents(entries: Document, events: Document): List<Event>
     coroutineScope {
         for (link in eventLinks) {
             val name = link.textContent
-            val eventHref = link.attributes["href"] ?: continue
+            val eventHref = link["href"] ?: continue
 
             launch {
-                val eventDoc = async { "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument() }
+                val eventDoc = async { "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument(false) }
 
                 val entryHref = entryLinks.firstOrNull { it.textContent == name }?.attributes["href"]
-                val entryDoc = async { entryHref?.let { "https://www.tabroom.com$it".fetchDocument() } }
+                val entryDoc = async { entryHref?.let { "https://www.tabroom.com$it".fetchDocument(false) } }
 
                 val event = getEvent(name, entryDoc.await(), eventDoc.await())
                 eventList.add(event)
@@ -85,15 +85,15 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
                     val code = row.children[3].textContent
                     val entry = Entry(school, location, entryName, code)
 
-                    if (row.children.size < 5) {
+                    if (row.children.size < 5 || row.children[4].children.isEmpty()) {
                         entries.add(entry)
                         return@launch
                     }
 
-                    val recordLink = row.children[4].children[0].attributes["href"]
+                    val recordLink = row.children[4].children[0]["href"]
                     if (recordLink != null)
                         launch {
-                            val recordDoc = "https://www.tabroom.com$recordLink".fetchDocument()
+                            val recordDoc = "https://www.tabroom.com$recordLink".fetchDocument(false)
                             val isDouble = recordLink.substringAfter("&id2=").isNotEmpty()
 
                             (entry.ballots as MutableMap).putAll(getRecord(recordDoc, isDouble))
@@ -106,10 +106,10 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
     }
 
     val event = events.querySelectorAll(EVENT_INFO_SELECTOR).first { it.textContent == name }
-    val eventHref = event.attributes["href"] ?: return@coroutineScope Event(name, 0, emptyMap(), entries)
+    val eventHref = event["href"] ?: return@coroutineScope Event(name, 0, emptyMap(), entries)
 
     val fieldsId = async {
-        val eventDoc = "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument()
+        val eventDoc = "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument(false)
 
         // Event Attributes
         val id = eventHref.substringAfter('=').substringBefore('&').toInt()
@@ -135,10 +135,10 @@ internal suspend fun getAllJudges(root: Document): Map<String, List<Judge>> = co
         for ((i, link) in judgeLinks.withIndex())
             launch {
                 val type = link.children[0].textContent
-                val listLink = judgeLists[i].attributes["href"] ?: return@launch
+                val listLink = judgeLists[i]["href"] ?: return@launch
                 if (listLink.contains("paradigms")) return@launch
 
-                val doc = "https://www.tabroom.com$listLink".fetchDocument()
+                val doc = "https://www.tabroom.com$listLink".fetchDocument(false)
                 judges.put(type, getJudges(doc))
             }
     }

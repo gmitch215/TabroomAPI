@@ -21,20 +21,20 @@ import kotlin.jvm.JvmName
 suspend fun getTournament(id: Int): Tournament = coroutineScope {
     val urls = TournamentUrls(id)
 
-    val home = urls.home.fetchDocument()
+    val home = urls.home.fetchDocument(false)
     val tourney = getTournament(home)
 
     coroutineScope {
         launch {
-            val entries = async { urls.entries.fetchDocument() }
-            val eventsDoc = async { urls.events.fetchDocument() }
+            val entries = async { urls.entries.fetchDocument(false) }
+            val eventsDoc = async { urls.events.fetchDocument(false) }
             val events = getEvents(entries.await(), eventsDoc.await())
 
             (tourney.events as MutableList).addAll(events)
         }
 
         launch {
-            val judgesDoc = urls.judges.fetchDocument()
+            val judgesDoc = urls.judges.fetchDocument(false)
             val judges = getAllJudges(judgesDoc)
 
             (tourney.judges as MutableMap).putAll(judges)
