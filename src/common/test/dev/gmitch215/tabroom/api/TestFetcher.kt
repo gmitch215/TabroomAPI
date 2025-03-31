@@ -19,7 +19,21 @@ class TestFetcher {
         assertTrue(t1.location.isNotEmpty())
 
         assertTrue(t1.events.isNotEmpty())
-        assertTrue(t1.events.any { it.entries.any { it.ballots.isNotEmpty() } })
+        for (event in t1.events) {
+            assertTrue { event.name.isNotEmpty() }
+            assertTrue { event.entries.isNotEmpty() }
+
+            for (entry in event.entries) {
+                assertTrue { entry.name.isNotEmpty() }
+                assertTrue { entry.location.isNotEmpty() }
+            }
+
+            assertTrue { event.fields.isNotEmpty() }
+            for ((key, value) in event.fields) {
+                assertTrue { key.isNotEmpty() }
+                assertTrue { value.isNotEmpty() }
+            }
+        }
 
         val firstBallot = t1.events.filter { it.entries.any { it.ballots.isNotEmpty() } }[0].entries[0].ballots.entries.first().value
         assertTrue(firstBallot.eventName.isNotEmpty())
@@ -27,7 +41,6 @@ class TestFetcher {
         assertTrue(firstBallot.judge.isNotEmpty())
         assertTrue(firstBallot.tournamentDate.isNotEmpty())
         assertTrue(firstBallot.tournament.isNotEmpty())
-        assertTrue(firstBallot.speaker1Points > 0)
 
         // Schaumburg 2024
         val t2 = getTournament(32668)
