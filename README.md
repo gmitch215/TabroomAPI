@@ -7,6 +7,13 @@
 [**Tabroom.com**](https://tabroom.com) is a platform used by the Speech and Debate community to manage tournaments and post results.
 Since it does not have an official API, this repository scrapes the website to provide an API for developers to use.
 
+### What about `api.tabroom.com`?
+
+- `api.tabroom.com` is a private API used by the Tabroom website that requires authentication.
+- It's also missing a lot of the stuff you would need (like ballot information, judge paradigms, etc.)
+
+It's a good resource for getting surface-level information about yourself when you log in, but it doesn't provide the same level of detail as this API.
+
 ## Installation
 
 Maven
