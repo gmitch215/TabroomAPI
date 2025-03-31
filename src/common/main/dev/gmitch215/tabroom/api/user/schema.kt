@@ -2,6 +2,9 @@
 
 package dev.gmitch215.tabroom.api.user
 
+import dev.gmitch215.tabroom.api.Ballot
+import dev.gmitch215.tabroom.api.Judge
+import dev.gmitch215.tabroom.api.Tournament
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -89,4 +92,81 @@ data class NSDAUser(
      * The date of the last points update.
      */
     val lastPointsDate: String
+)
+
+/**
+ * Represents a round in a tournament that a user is competiting in.
+ */
+@JsExport
+data class Round(
+    /**
+     * The round label name.
+     */
+    val label: String,
+    /**
+     * The starting time of the round.
+     */
+    val start: String,
+    /**
+     * The room number for the location of round.
+     */
+    val room: String,
+    /**
+     * The link for document sharing.
+     */
+    val docShareLink: String,
+    /**
+     * The round data associated with this round.
+     */
+    val data: List<RoundData>
+)
+
+/**
+ * Represents the result data for a round.
+ */
+@JsExport
+data class RoundData(
+    /**
+     * A judge for the round.
+     */
+    val judge: Judge,
+    /**
+     * The judge's paradigm for the round.
+     */
+    val judgeParadigm: String,
+    /**
+     * A ballot for the round by the specified judge.
+     */
+    val ballot: Ballot?,
+    /**
+     * The full Reason For Decision (RFD) for the ballot, if available.
+     */
+    val rfd: String?
+)
+
+/**
+ * Represents a historical tournament entry for a user.
+ */
+@JsExport
+data class TournamentEntry(
+    /**
+     * The tournament this entry is for.
+     */
+    val tournament: Tournament,
+    /**
+     * The date the tournament is on.
+     */
+    val date: String,
+    /**
+     * The name for the user's entry in the tournament.
+     */
+    val code: String,
+    /**
+     * The division of the tournament.
+     */
+    val division: String,
+    /**
+     * The round this entry is in.
+     */
+    val rounds: List<Round>
 )

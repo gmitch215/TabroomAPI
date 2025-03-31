@@ -216,7 +216,14 @@ enum class DebateSide {
      * The negative or con side of the debate.
      */
     NEGATIVE,
-
+    /**
+     * The user got a bye, meaning they did not debate in this round.
+     */
+    BYE,
+    /**
+     * The user and the opponent must flip for the side.
+     */
+    FLIP,
     /**
      * The side is unknown.
      */
@@ -237,6 +244,8 @@ enum class DebateSide {
             return when (string.lowercase()) {
                 "affirmative", "aff", "pro" -> AFFIRMATIVE
                 "negative", "neg", "con" -> NEGATIVE
+                "fft" -> FLIP
+                "bye" -> BYE
                 else -> UNKNOWN
             }
         }
@@ -272,6 +281,9 @@ data class Ballot(
      * if there is only one judge, and the judge votes for the entry,
      * this will be `0`. If there are three judges, and two judges voted
      * for the entry, this will be `1`.
+     *
+     * However, for parsing the current logged-in user's history, each judge
+     * will have a ballot, meaning that this number is either `0` or `1`.
      */
     @SerialName("ballots_lost")
     val ballotsLost: Int = 0,
@@ -282,6 +294,9 @@ data class Ballot(
      * if there is only one judge, and the judge votes for the entry,
      * this will be `1`. If there are three judges, and two judges voted
      * for the entry, this will be `2`.
+     *
+     * However, for parsing the current logged-in user's history, each judge
+     * will have a ballot, meaning that this number is either `0` or `1`.
      */
     @SerialName("ballots_won")
     val ballotsWon: Int = 0,
@@ -289,6 +304,9 @@ data class Ballot(
      * The number of ballots for the round.
      *
      * This is equivalent to the number of judges in the round.
+     *
+     * If this ballot is for the current logged-in user, this number
+     * will be `1`, as there is only one ballot per judge.
      */
     @SerialName("total_ballots")
     val ballotsCount: Int = ballotsLost + ballotsWon,
@@ -307,17 +325,17 @@ data class Ballot(
      * The level of the debate.
      */
     @SerialName("event_level")
-    val level: DebateLevel = DebateLevel.OPEN,
+    var level: DebateLevel = DebateLevel.OPEN,
     /**
      * The name of the event.
      */
     @SerialName("event_name")
-    val eventName: String = "Unknown",
+    var eventName: String = "Unknown",
     /**
      * The names of the judges, comma separated.
      */
     @SerialName("judge_raw")
-    val judge: String = "Unknown",
+    var judge: String = "Unknown",
     /**
      * The debated side.
      */
@@ -359,12 +377,12 @@ data class Ballot(
      * The name of the tournament.
      */
     @SerialName("tourn")
-    val tournament: String,
+    var tournament: String,
     /**
      * The date of the tournament.
      */
     @SerialName("tourn_start")
-    val tournamentDate: String,
+    var tournamentDate: String,
     /**
      * Whether this ballot was submitted this year.
      */
