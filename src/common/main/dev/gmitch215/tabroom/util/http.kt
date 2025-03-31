@@ -28,7 +28,7 @@ internal val client
 
 internal val cache = mutableMapOf<String, Document>()
 
-internal suspend fun String.fetchDocument(): Document {
+internal suspend fun String.fetchDocument(useToken: Boolean = true): Document {
     if (this in cache) return cache[this]!!
 
     val res = client.get(this) {
@@ -42,7 +42,7 @@ internal suspend fun String.fetchDocument(): Document {
             append("Upgrade-Insecure-Requests", "1")
         }
 
-        if (isLoggedIn)
+        if (isLoggedIn && useToken)
             cookie("TabroomToken", token!!)
     }
 
@@ -85,7 +85,11 @@ expect fun decodeURL(url: String): String
 val isLoggedIn: Boolean
     get() = token != null
 
-internal var token: String? = null
+/**
+ * The current Session ID for the API.
+ */
+var token: String? = null
+    private set
 
 private suspend fun getSaltAndSha(): Pair<String, String> {
     val document = USER_LOGIN.fetchDocument()
