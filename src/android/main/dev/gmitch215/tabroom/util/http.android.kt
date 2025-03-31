@@ -1,7 +1,6 @@
-package dev.gmitch215.tabroom
+package dev.gmitch215.tabroom.util
 
 import android.net.Uri
-import dev.gmitch215.tabroom.util.PARALLEL_COUNT
 import io.ktor.client.engine.*
 import io.ktor.client.engine.okhttp.*
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +11,6 @@ internal actual val engine: HttpClientEngine = OkHttp.create {
     dispatcher = Dispatchers.IO.limitedParallelism(PARALLEL_COUNT)
 
     config {
-        followRedirects(true)
         connectTimeout(30, TimeUnit.SECONDS)
         readTimeout(30, TimeUnit.SECONDS)
         writeTimeout(30, TimeUnit.SECONDS)

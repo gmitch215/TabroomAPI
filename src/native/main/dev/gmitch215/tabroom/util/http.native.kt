@@ -2,17 +2,13 @@
 
 package dev.gmitch215.tabroom.util
 
-import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.UnsafeNumber
-import kotlinx.cinterop.allocArray
-import kotlinx.cinterop.memScoped
-import platform.posix.snprintf
+import kotlinx.cinterop.*
+import platform.posix.sprintf
 
 actual fun encodeURL(url: String): String = url.encodeToByteArray().joinToString("") {
     memScoped {
         val str = allocArray<ByteVar>(4) // 3 for %XX + 1 for null terminator
-        snprintf(str, 4.toUInt(), "%%%02X", it)
+        sprintf(str, "%%%02X", it)
         str.toString()
     }
 }
