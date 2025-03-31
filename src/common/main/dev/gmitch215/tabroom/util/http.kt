@@ -2,17 +2,16 @@
 
 package dev.gmitch215.tabroom.util
 
+import dev.gmitch215.tabroom.util.html.Document
+import dev.gmitch215.tabroom.util.html.inputValue
 import io.ktor.client.*
 import io.ktor.client.engine.*
-import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.utils.io.charsets.*
 import kotlinx.io.IOException
-import dev.gmitch215.tabroom.util.html.Document
-import dev.gmitch215.tabroom.util.html.querySelector
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -23,8 +22,8 @@ internal expect val engine: HttpClientEngine
 
 internal val client
     get() = HttpClient(engine) {
-        install(HttpCookies)
         expectSuccess = false
+        followRedirects = false
     }
 
 internal val cache = mutableMapOf<String, Document>()
@@ -34,15 +33,20 @@ internal suspend fun String.fetchDocument(): Document {
 
     val res = client.get(this) {
         headers {
+            append("Host", "www.tabroom.com")
             append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
 
-            token?.let { cookie("TabroomToken", it) }
+            append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+            append("Accept-Language", "en-US,en;q=0.9")
+            append("Connection", "keep-alive")
+            append("Upgrade-Insecure-Requests", "1")
         }
+
+        if (isLoggedIn)
+            cookie("TabroomToken", token!!)
     }
 
-    if (!res.status.isSuccess()) {
-        throw IOException("Failed to fetch document: ${res.status}")
-    }
+    if (!res.status.isSuccess()) throw IOException("Failed to fetch document: ${res.status}\n${res.bodyAsText(Charsets.UTF_8)}")
 
     val text = res.bodyAsText(Charsets.UTF_8)
     cache[this] = Document(this, text)
@@ -83,13 +87,10 @@ val isLoggedIn: Boolean
 
 internal var token: String? = null
 
-const val SALT_SELECTOR = "input[name=salt]"
-const val SHA_SELECTOR = "input[name=sha]"
-
 private suspend fun getSaltAndSha(): Pair<String, String> {
     val document = USER_LOGIN.fetchDocument()
-    val salt = document.querySelector(SALT_SELECTOR)?.attributes["value"] ?: throw IllegalStateException("Salt not found in document")
-    val sha = document.querySelector(SHA_SELECTOR)?.attributes["value"] ?: throw IllegalStateException("SHA not found in document")
+    val salt = document.inputValue("salt") ?: throw IllegalStateException("Salt not found in document")
+    val sha = document.inputValue("sha") ?: throw IllegalStateException("SHA not found in document")
 
     return Pair(salt, sha)
 }
@@ -139,6 +140,7 @@ suspend fun login(username: String, password: String): Boolean {
 
     val tabToken = cookie.firstOrNull { it.name == "TabroomToken" }?.value
     if (tabToken == null) return false
+    if (tabToken.isEmpty()) throw IllegalStateException("TabroomToken is empty")
 
     token = decodeURL(tabToken)
     return true
@@ -149,13 +151,15 @@ suspend fun login(username: String, password: String): Boolean {
  */
 suspend fun logout() {
     if (!isLoggedIn) return
+
+    val tabToken = token ?: return
     token = null
 
     client.get(USER_LOGOUT) {
         headers {
             append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
             append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            cookie("TabroomToken", token ?: "")
+            cookie("TabroomToken", tabToken)
         }
     }
 }

@@ -9,12 +9,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.js.JsName
+import kotlin.jvm.JvmName
 
 /**
  * Gets a tournament by its ID.
  * @param id The ID of the tournament.
  * @return The tournament.
  */
+@JvmName("getTournamentAsync")
 @JsName("getTournamentAsync")
 suspend fun getTournament(id: Int): Tournament = coroutineScope {
     val urls = TournamentUrls(id)

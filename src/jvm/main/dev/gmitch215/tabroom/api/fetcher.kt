@@ -2,6 +2,8 @@
 
 package dev.gmitch215.tabroom.api
 
+import dev.gmitch215.tabroom.api.user.User
+import dev.gmitch215.tabroom.api.user.getCurrentUser
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -9,4 +11,12 @@ import kotlinx.coroutines.runBlocking
  * @param id The ID of the tournament.
  * @return The tournament.
  */
+@JvmName("getTournament")
 fun getTournamentSync(id: Int): Tournament = runBlocking { getTournament(id) }
+
+/**
+ * Fetches the current user from Tabroom.
+ * @throws IllegalStateException if not logged in
+ */
+@JvmName("getCurrentUser")
+fun getCurrentUserSync(): User = runBlocking { getCurrentUser() }
