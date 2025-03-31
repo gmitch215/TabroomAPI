@@ -194,7 +194,7 @@ jobs:
     runs-on: macos-latest
     needs: build
     name: Publish to Repository
-    if: ${{ github.event_name != 'pull_request' && github.ref_name == 'master' }}
+    if: ${{ github.event_name != 'pull_request' }}
     timeout-minutes: 30
 
     permissions:
@@ -229,6 +229,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew publishAllPublicationsToCalculusGamesRepository publishJsPackageToCalculusGamesRegistry -Psnapshot=true
       - name: Publish to GitHub Packages
+        if: ${{ github.ref_name == 'master' }}
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
