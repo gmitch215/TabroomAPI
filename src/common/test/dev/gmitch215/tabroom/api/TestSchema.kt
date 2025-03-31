@@ -1,6 +1,7 @@
 package dev.gmitch215.tabroom.api
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -95,5 +96,16 @@ class TestSchema {
         assertTrue(judge.school == "Judge School")
         assertTrue(judge.location == "Judge Location")
         assertFalse(judge.hasParadigm)
+    }
+
+    @Test
+    fun testEnums() {
+        assertEquals("OPEN", DebateLevel.OPEN.name)
+        assertEquals("VARSITY", DebateLevel.VARSITY.name)
+        assertTrue { DebateLevel.entries.isNotEmpty() }
+
+        assertEquals("AFFIRMATIVE", DebateSide.AFFIRMATIVE.name)
+        assertEquals("NEGATIVE", DebateSide.NEGATIVE.name)
+        assertTrue { DebateSide.entries.isNotEmpty() }
     }
 }
