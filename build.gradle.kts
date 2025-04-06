@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.serialization") version "2.1.20"
     id("org.jetbrains.kotlin.native.cocoapods") version "2.1.20"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.android.library") version "8.9.0"
+    id("com.android.library") version "8.9.1"
     id("com.vanniktech.maven.publish") version "0.31.0"
     id("dev.petuska.npm.publish") version "3.5.3"
 
@@ -75,12 +75,12 @@ kotlin {
     watchosArm64()
 
     sourceSets {
-        val ktorVersion = "3.1.1"
+        val ktorVersion = "3.1.2"
         val ksoupVersion = "0.2.0"
 
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
             implementation("io.ktor:ktor-client-core:$ktorVersion")
         }
 
