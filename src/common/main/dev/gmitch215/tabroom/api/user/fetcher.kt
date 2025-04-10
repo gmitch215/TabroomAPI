@@ -164,10 +164,8 @@ suspend fun getRoundResults(tourneyId: Int, studentId: Int): List<Round> = corou
                                     }
                                 }
 
-                                val ballot = if (child.children.size > 1) {
+                                val ballot = if (child.children.size > 1 && child.children[1].children.size > 1) {
                                     val ballotData = child.children[1]
-                                    if (ballotData.children.isEmpty()) null
-
                                     val decision = ballotData.children[0].textContent.trim()
                                     val wc = if (decision == "W") 1 else 0
                                     val restOfResult = ballotData.children[1]
