@@ -170,3 +170,39 @@ data class TournamentEntry(
      */
     val rounds: List<Round>
 )
+
+/**
+ * Represents a session for a user.
+ */
+@JsExport
+data class Session(
+    /**
+     * The time for the session being last active.
+     */
+    val lastActiveTime: String?,
+    /**
+     * The date for the session being last active.
+     */
+    val lastActiveDate: String?,
+    /**
+     * The browser identifier for the session.
+     */
+    val browser: String,
+    /**
+     * The IP address for the session as a string.
+     */
+    val ip: String,
+    /**
+     * The internet service provider for the session, if available.
+     */
+    val isp: String?,
+    /**
+     * The location of the session, if available.
+     */
+    val location: String?,
+) {
+    /**
+     * Whether the provided session is the session for the currently logged-in TabroomAPI Client.
+     */
+    val isCurrent: Boolean = lastActiveTime != null && lastActiveDate != null
+}

@@ -17,6 +17,7 @@ import dev.gmitch215.tabroom.util.isLoggedIn
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlin.js.JsExport
 import kotlin.js.JsName
 import kotlin.jvm.JvmName
 
@@ -287,4 +288,43 @@ suspend fun getEntryHistory(limit: Int = 10): List<TournamentEntry> = coroutineS
                 }
 
     return@coroutineScope history
+}
+
+private const val SESSION_ROW = "div.main > div.full.flexrow.row.ltborderbottom.smallish"
+
+/**
+ * Fetches the current sessions for the user when logged in.
+ * @return A list of login sessions for the user
+ * @throws IllegalStateException if not logged in
+ */
+@JvmName("getCurrentSessionsAsync")
+@JsName("getCurrentSessionsAsync")
+suspend fun getCurrentSessions(): List<Session> = coroutineScope {
+    if (!isLoggedIn) throw IllegalStateException("User is not logged in")
+
+    val doc = USER_PROFILE.fetchDocument()
+
+    val sessions = doc.querySelectorAll(SESSION_ROW)
+    val sessionList = mutableListOf<Session>()
+
+    for (child in sessions) {
+        val lastActiveTime = child.children[0].textContent.trim()
+        val lastActiveDate = child.children[1].textContent.trim()
+        val browser = child.children[2].textContent.trim()
+        val ip = child.children[3].textContent.trim()
+        val isp = child.children[4].textContent.trim()
+        val location = child.children[5].textContent.trim()
+
+        sessionList.add(
+            Session(
+                lastActiveTime.ifEmpty { null },
+                lastActiveDate.ifEmpty { null },
+                browser,
+                ip,
+                isp.ifEmpty { null },
+                location.ifEmpty { null }
+            )
+        )
+    }
+    return@coroutineScope sessionList
 }

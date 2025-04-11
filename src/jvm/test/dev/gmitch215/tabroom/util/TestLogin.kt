@@ -1,9 +1,6 @@
 package dev.gmitch215.tabroom.util
 
-import dev.gmitch215.tabroom.api.user.getCurrentUser
-import dev.gmitch215.tabroom.api.user.getEntryHistory
-import dev.gmitch215.tabroom.api.user.getJudgeParadigm
-import dev.gmitch215.tabroom.api.user.getRoundResults
+import dev.gmitch215.tabroom.api.user.*
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -43,12 +40,12 @@ class TestLogin {
         assertNotEquals("Unknown", user.country)
         assertNotEquals(0, user.zipCode)
 
-        assertNotNull(user.nsda)
-        assertFalse { user.nsda.fullName.isEmpty() }
-        assertTrue { user.nsda.memberId > 0 }
-        assertTrue { user.nsda.meritPoints > 0 }
-        assertTrue { user.nsda.pointsToNextDegree > -1 }
-        assertFalse { user.nsda.lastPointsDate.isEmpty() }
+        val nsda = assertNotNull(user.nsda)
+        assertFalse { nsda.fullName.isEmpty() }
+        assertTrue { nsda.memberId > 0 }
+        assertTrue { nsda.meritPoints > 0 }
+        assertTrue { nsda.pointsToNextDegree > -1 }
+        assertFalse {nsda.lastPointsDate.isEmpty() }
 
         // getEntryHistory
         val history = getEntryHistory(5)
@@ -72,24 +69,36 @@ class TestLogin {
                             assertFalse { data.judgeParadigm.isEmpty() }
                             assertNotNull(data.rfd)
 
-                            assertNotNull(data.ballot)
-                            assertNotEquals("Unknown", data.ballot.eventName)
-                            assertNotEquals("Unknown", data.ballot.judge)
-                            assertNotEquals("Unknown", data.ballot.opponent)
+                            val ballot = assertNotNull(data.ballot)
+                            assertNotEquals("Unknown", ballot.eventName)
+                            assertNotEquals("Unknown", ballot.judge)
+                            assertNotEquals("Unknown", ballot.opponent)
 
-                            if (data.ballot.isWin) {
-                                assertEquals("W", data.ballot.decision)
-                                assertEquals(1, data.ballot.ballotsWon)
-                                assertEquals(0, data.ballot.ballotsLost)
+                            if (ballot.isWin) {
+                                assertEquals("W", ballot.decision)
+                                assertEquals(1, ballot.ballotsWon)
+                                assertEquals(0, ballot.ballotsLost)
                             } else {
-                                assertEquals("L", data.ballot.decision)
-                                assertEquals(0, data.ballot.ballotsWon)
-                                assertEquals(1, data.ballot.ballotsLost)
+                                assertEquals("L", ballot.decision)
+                                assertEquals(0, ballot.ballotsWon)
+                                assertEquals(1, ballot.ballotsLost)
                             }
 
-                            assertEquals(1, data.ballot.ballotsCount)
+                            assertEquals(1, ballot.ballotsCount)
                         }
                 }
+        }
+
+        // getCurrentSessions
+        val sessions = getCurrentSessions()
+        assertFalse { sessions.isEmpty() }
+        assertTrue { sessions.any { it.isCurrent } }
+        assertTrue { sessions.any { it.lastActiveTime != null } }
+        assertTrue { sessions.any { it.lastActiveDate != null } }
+
+        for (session in sessions) {
+            assertTrue { session.browser.isNotEmpty() }
+            assertTrue { session.ip.isNotEmpty() }
         }
     } finally { logout() }}
 
@@ -99,6 +108,7 @@ class TestLogin {
         assertFailsWith<IllegalStateException> { getJudgeParadigm(1) }
         assertFailsWith<IllegalStateException> { getRoundResults(0, 0) }
         assertFailsWith<IllegalStateException> { getEntryHistory(5) }
+        assertFailsWith<IllegalStateException> { getCurrentSessions() }
     }
 
 }
