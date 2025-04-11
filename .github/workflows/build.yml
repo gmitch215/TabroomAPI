@@ -246,10 +246,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install UglifyJS'
+      - name: Install UglifyJS
         run: npm install -g uglify-js
       - name: Extract Gradle version
         run: echo "VERSION=$(./gradlew properties -Psnapshot=true | grep '^version:' | awk '{print $2}')" >> $GITHUB_ENV
@@ -258,7 +264,7 @@ jobs:
       - name: Compress JS Library
         run: |
           mkdir build/upload
-          uglifyjs build/dist/js/productionLibrary/*.js -o build/upload/tabroomapai-${{ env.VERSION }}.min.js --source-map -c
+          uglifyjs build/dist/js/productionLibrary/*.js -o build/upload/tabroomapi-${{ env.VERSION }}.min.js --source-map -c
       - name: Upload to R2 Bucket
         uses: ryand56/r2-upload-action@latest
         with:
