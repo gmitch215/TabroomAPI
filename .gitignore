@@ -7,3 +7,4 @@ build/
 *.podspec
 local.properties
 kotlin-js-store/
+.DS_Store
