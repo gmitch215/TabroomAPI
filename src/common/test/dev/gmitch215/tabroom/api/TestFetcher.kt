@@ -54,4 +54,16 @@ class TestFetcher {
         assertFalse(t2.events.any { it.entries.any { it.ballots.isNotEmpty() } })
     }
 
+    @Test
+    fun testSearchTournaments() = runTest(timeout = 3.minutes) {
+        val tournaments = searchTounaments("idc")
+        assertTrue(tournaments.isNotEmpty())
+
+        for (tournament in tournaments) {
+            assertTrue(tournament.name.isNotEmpty())
+            assertTrue(tournament.year.isNotEmpty())
+            assertTrue(tournament.location.isNotEmpty())
+        }
+    }
+
 }

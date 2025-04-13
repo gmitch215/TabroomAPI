@@ -1,3 +1,5 @@
+@file:OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
+
 package dev.gmitch215.tabroom.api
 
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -12,5 +14,13 @@ import kotlin.js.Promise
  */
 @JsName("getTournament")
 @JsExport
-@OptIn(DelicateCoroutinesApi::class, ExperimentalJsExport::class)
 fun getTournamentAsPromise(id: Int): Promise<Tournament> = GlobalScope.promise { getTournament(id) }
+
+/**
+ * Searches for tournaments on Tabroom.com using the provided query.
+ * @param query The search query to use.
+ * @return A [Promise] that resolves to a list of [Tournament] objects.
+ */
+@JsName("searchTournaments")
+@JsExport
+fun searchTournamentsAsPromise(query: String): Promise<List<Tournament>> = GlobalScope.promise { searchTounaments(query) }

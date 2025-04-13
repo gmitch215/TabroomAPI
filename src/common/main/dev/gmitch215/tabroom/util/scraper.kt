@@ -51,10 +51,10 @@ internal suspend fun getEvents(entries: Document, events: Document): List<Event>
             val eventHref = link["href"] ?: continue
 
             launch {
-                val eventDoc = async { "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument(false) }
+                val eventDoc = async { "https://$HOSTNAME/index/tourn/$eventHref".fetchDocument(false) }
 
                 val entryHref = entryLinks.firstOrNull { it.textContent == name }?.attributes["href"]
-                val entryDoc = async { entryHref?.let { "https://www.tabroom.com$it".fetchDocument(false) } }
+                val entryDoc = async { entryHref?.let { "https://$HOSTNAME$it".fetchDocument(false) } }
 
                 val event = getEvent(name, entryDoc.await(), eventDoc.await())
                 eventList.add(event)
@@ -93,7 +93,7 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
                     val recordLink = row.children[4].children[0]["href"]
                     if (recordLink != null)
                         launch {
-                            val recordDoc = "https://www.tabroom.com$recordLink".fetchDocument(false)
+                            val recordDoc = "https://$HOSTNAME$recordLink".fetchDocument(false)
                             val isDouble = recordLink.substringAfter("&id2=").isNotEmpty()
 
                             (entry.ballots as MutableMap).putAll(getRecord(recordDoc, isDouble))
@@ -109,7 +109,7 @@ private suspend fun getEvent(name: String, entry: Document?, events: Document): 
     val eventHref = event["href"] ?: return@coroutineScope Event(name, 0, emptyMap(), entries)
 
     val fieldsId = async {
-        val eventDoc = "https://www.tabroom.com/index/tourn/$eventHref".fetchDocument(false)
+        val eventDoc = "https://$HOSTNAME/index/tourn/$eventHref".fetchDocument(false)
 
         // Event Attributes
         val id = eventHref.substringAfter('=').substringBefore('&').toInt()
@@ -138,7 +138,7 @@ internal suspend fun getAllJudges(root: Document): Map<String, List<Judge>> = co
                 val listLink = judgeLists[i]["href"] ?: return@launch
                 if (listLink.contains("paradigms")) return@launch
 
-                val doc = "https://www.tabroom.com$listLink".fetchDocument(false)
+                val doc = "https://$HOSTNAME$listLink".fetchDocument(false)
                 judges.put(type, getJudges(doc))
             }
     }
