@@ -111,4 +111,27 @@ class TestLogin {
         assertFailsWith<IllegalStateException> { getCurrentSessions() }
     }
 
+    @Test
+    fun testLogout() = runTest {
+        val username = System.getenv("TABROOM_USERNAME")
+        val password = System.getenv("TABROOM_PASSWORD")
+
+        if (username == null || password == null) {
+            println("Warning: TABROOM_USERNAME and TABROOM_PASSWORD must be set in the environment.")
+            return@runTest
+        }
+
+        login(username, password)
+        assertTrue { isLoggedIn }
+
+        login(username, password) // re-login
+        assertTrue { isLoggedIn }
+
+        logout()
+        assertFalse { isLoggedIn }
+
+        logout()
+        assertFalse { isLoggedIn }
+    }
+
 }
