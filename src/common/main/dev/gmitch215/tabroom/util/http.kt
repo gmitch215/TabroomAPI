@@ -26,6 +26,8 @@ internal val client
         followRedirects = false
     }
 
+internal const val USER_AGENT = "Ktor HTTP Client, Tabroom API v1"
+
 internal val cache = mutableMapOf<String, Document>()
 
 internal suspend fun String.fetchDocument(useToken: Boolean = true): Document {
@@ -33,8 +35,7 @@ internal suspend fun String.fetchDocument(useToken: Boolean = true): Document {
 
     val res = client.get(this) {
         headers {
-            append("Host", "www.tabroom.com")
-            append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
+            append("User-Agent", USER_AGENT)
 
             append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             append("Accept-Language", "en-US,en;q=0.9")
@@ -46,7 +47,7 @@ internal suspend fun String.fetchDocument(useToken: Boolean = true): Document {
             cookie("TabroomToken", token!!)
     }
 
-    if (!res.status.isSuccess()) throw IOException("Failed to fetch document: ${res.status}\n${res.bodyAsText(Charsets.UTF_8)}")
+    if (!res.status.isSuccess()) throw IOException("Failed to fetch document '$this': ${res.status}\n${res.bodyAsText(Charsets.UTF_8)}")
 
     val text = res.bodyAsText(Charsets.UTF_8)
     cache[this] = Document(this, text)
@@ -64,20 +65,6 @@ fun closeClient() = client.close()
  */
 @JsExport
 fun clearCache() = cache.clear()
-
-/**
- * Encodes a URL string for use in a query parameter.
- * @param url The string to encode.
- * @return The encoded string.
- */
-expect fun encodeURL(url: String): String
-
-/**
- * Decodes a URL string from a query parameter.
- * @param url The string to decode.
- * @return The decoded string.
- */
-expect fun decodeURL(url: String): String
 
 /**
  * Whether the API has currently stored a Session ID.
@@ -131,7 +118,7 @@ suspend fun login(username: String, password: String): Boolean {
         }
     ) {
         headers {
-            append("User-Agent", "Ktor HTTP Client, Tabroom API v1")
+            append("User-Agent", USER_AGENT)
             append("Content-Type", "application/x-www-form-urlencoded")
             append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
         }
@@ -146,7 +133,7 @@ suspend fun login(username: String, password: String): Boolean {
     if (tabToken == null) return false
     if (tabToken.isEmpty()) throw IllegalStateException("TabroomToken is empty")
 
-    token = decodeURL(tabToken)
+    token = tabToken.decodeURLQueryComponent()
     return true
 }
 

@@ -13,9 +13,6 @@ internal actual val engine: HttpClientEngine = Js.create {
     dispatcher = Dispatchers.Default
 }
 
-actual fun encodeURL(url: String): String = js("encodeURIComponent")(url).unsafeCast<String>()
-actual fun decodeURL(url: String): String = js("decodeURIComponent")(url).unsafeCast<String>()
-
 /**
  * Login to Tabroom using the given username and password.
  * @param username The username to log in with.

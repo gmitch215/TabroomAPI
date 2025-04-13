@@ -16,6 +16,3 @@ internal actual val engine: HttpClientEngine = OkHttp.create {
         writeTimeout(30, TimeUnit.SECONDS)
     }
 }
-
-actual fun encodeURL(url: String): String = Uri.encode(url)
-actual fun decodeURL(url: String): String = Uri.decode(url)

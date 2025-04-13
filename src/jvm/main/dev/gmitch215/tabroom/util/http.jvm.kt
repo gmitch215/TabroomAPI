@@ -11,6 +11,3 @@ internal actual val engine: HttpClientEngine = Java.create {
     pipelining = true
     dispatcher = Dispatchers.IO.limitedParallelism(PARALLEL_COUNT)
 }
-
-actual fun encodeURL(url: String): String = URLEncoder.encode(url, StandardCharsets.UTF_8)
-actual fun decodeURL(url: String): String = URLDecoder.decode(url, StandardCharsets.UTF_8)
