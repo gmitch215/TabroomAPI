@@ -104,6 +104,30 @@ public class Main {
 
 ### JavaScript
 
+#### Browser
+
+```html
+<script src="https://cdn.gmitch215.dev/lib/TabroomAPI/tabroom-api-<version>.js"></script>
+```
+
+```js
+tabroom.dev.gmitch215.tabroom.api.getTournament(30082)
+    .then(tournament => {
+        console.log(tournament.description);
+        tournament.events.forEach(event => {
+            console.log(event.name + " Entries:");
+            event.entries.forEach(entry => {
+                console.log(entry.name + " from " + entry.school + " is competing!");
+            });
+        });
+    })
+    .catch(err => {
+        console.error(err);
+    });
+```
+
+#### NodeJS
+
 ```js
 import * as tabroom from '@gmitch215/tabroom-api';
 
