@@ -252,9 +252,6 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           cache: 'gradle'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - name: Build JS Distribution
         run: ./gradlew clean jsBrowserDistribution
       - name: Upload to R2 Bucket
