@@ -1,8 +1,13 @@
-@file:OptIn(ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalWasmDsl::class, ExperimentalDistributionDsl::class)
 
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
 
 plugins {
     kotlin("multiplatform") version "2.1.10"
@@ -45,16 +50,20 @@ kotlin {
     jvm()
     js {
         browser {
+            webpackTask {
+                mainOutputFileName = "${project.name}-${project.version}.js"
+                output.library = "tabroom"
+            }
+
             testTask {
                 useMocha {
                     timeout = "10m"
                 }
             }
-
-            useCommonJs()
         }
 
         binaries.library()
+        binaries.executable()
         generateTypeScriptDefinitions()
     }
 
