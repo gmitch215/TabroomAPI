@@ -47,7 +47,6 @@ jobs:
 
   upload:
     runs-on: ubuntu-latest
-    needs: build
     name: Upload Build Artifacts
     if: ${{ github.event_name != 'pull_request' }}
     timeout-minutes: 30
