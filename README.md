@@ -113,16 +113,16 @@ public class Main {
 ```js
 tabroom.dev.gmitch215.tabroom.api.getTournament(30082)
     .then(tournament => {
-        console.log(tournament.description);
+        alert(tournament.description);
         tournament.events.forEach(event => {
-            console.log(event.name + " Entries:");
+            alert(event.name + " Entries:");
             event.entries.forEach(entry => {
-                console.log(entry.name + " from " + entry.school + " is competing!");
+                alert(entry.name + " from " + entry.school + " is competing!");
             });
         });
     })
     .catch(err => {
-        console.error(err);
+        alert(err);
     });
 ```
 
