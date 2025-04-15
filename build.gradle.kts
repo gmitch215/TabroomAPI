@@ -1,8 +1,13 @@
-@file:OptIn(ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalWasmDsl::class, ExperimentalDistributionDsl::class)
 
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
 
 plugins {
     kotlin("multiplatform") version "2.1.20"
@@ -18,9 +23,9 @@ plugins {
     signing
 }
 
-val v = "0.2.1"
+val v = "0.3.0"
 
-group = "xyz.gmitch215"
+group = "dev.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
 val desc = "Multiplatform API for Tabroom.com"
 description = desc
@@ -45,16 +50,20 @@ kotlin {
     jvm()
     js {
         browser {
+            webpackTask {
+                mainOutputFileName = "${project.name}-${project.version}.js"
+                output.library = "tabroom"
+            }
+
             testTask {
                 useMocha {
                     timeout = "10m"
                 }
             }
-
-            useCommonJs()
         }
 
         binaries.library()
+        binaries.executable()
         generateTypeScriptDefinitions()
     }
 
@@ -91,7 +100,8 @@ kotlin {
 
         jvmMain.dependencies {
             implementation("org.jsoup:jsoup:1.19.1")
-            implementation("io.ktor:ktor-client-jetty:$ktorVersion")
+            implementation("io.ktor:ktor-client-java:$ktorVersion")
+            implementation("ch.qos.logback:logback-classic:1.5.18")
         }
 
         androidMain.dependencies {
@@ -144,7 +154,7 @@ fun KotlinMultiplatformExtension.configureSourceSets() {
 
 android {
     compileSdk = 33
-    namespace = "xyz.gmitch215.tabroomapi"
+    namespace = "dev.gmitch215.tabroomapi"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -155,6 +165,14 @@ android {
 tasks {
     clean {
         delete("kotlin-js-store")
+    }
+
+    named("jsBrowserProductionLibraryDistribution") {
+        dependsOn("jsProductionExecutableCompileSync")
+    }
+
+    named("jsBrowserProductionWebpack") {
+        dependsOn("jsProductionLibraryCompileSync")
     }
 
     register("jvmJacocoTestReport", JacocoReport::class) {
