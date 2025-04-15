@@ -18,4 +18,4 @@ fun getTournamentSync(id: Int): Tournament = runBlocking { getTournament(id) }
  * @return A list of tournaments that match the query.
  */
 @JvmName("searchTournaments")
-fun searchTournamentsSync(query: String): List<Tournament> = runBlocking { searchTounaments(query) }
+fun searchTournamentsSync(query: String): List<Tournament> = runBlocking { searchTournaments(query) }
