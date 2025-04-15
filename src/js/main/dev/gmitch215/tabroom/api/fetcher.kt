@@ -23,4 +23,4 @@ fun getTournamentAsPromise(id: Int): Promise<Tournament> = GlobalScope.promise {
  */
 @JsName("searchTournaments")
 @JsExport
-fun searchTournamentsAsPromise(query: String): Promise<List<Tournament>> = GlobalScope.promise { searchTounaments(query) }
+fun searchTournamentsAsPromise(query: String): Promise<List<Tournament>> = GlobalScope.promise { searchTournaments(query) }
