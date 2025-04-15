@@ -65,9 +65,9 @@ private const val TOURNAMENT_SEARCH_LINKS = "div.main > table > tbody > tr > td 
  * @param query The query to search for.
  * @return A list of tournaments that match the query.
  */
-@JvmName("searchTounamentsAsync")
-@JsName("searchTounamentsAsync")
-suspend fun searchTounaments(query: String): List<Tournament> = coroutineScope {
+@JvmName("searchTournamentsAsync")
+@JsName("searchTournamentsAsync")
+suspend fun searchTournaments(query: String): List<Tournament> = coroutineScope {
     val tournaments = mutableListOf<Tournament>()
 
     val cacheKey = "$TOURNAMENT_SEARCH+$query"
