@@ -56,7 +56,7 @@ class TestFetcher {
 
     @Test
     fun testSearchTournaments() = runTest(timeout = 3.minutes) {
-        val tournaments = searchTounaments("idc")
+        val tournaments = searchTournaments("idc")
         assertTrue(tournaments.isNotEmpty())
 
         for (tournament in tournaments) {
