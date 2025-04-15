@@ -10,11 +10,11 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
 
 plugins {
-    kotlin("multiplatform") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
-    id("org.jetbrains.kotlin.native.cocoapods") version "2.1.10"
+    kotlin("multiplatform") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
+    id("org.jetbrains.kotlin.native.cocoapods") version "2.1.20"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.android.library") version "8.7.3"
+    id("com.android.library") version "8.9.1"
     id("com.vanniktech.maven.publish") version "0.31.0"
     id("dev.petuska.npm.publish") version "3.5.3"
 
@@ -88,14 +88,14 @@ kotlin {
         val ksoupVersion = "0.2.0"
 
         commonMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
             implementation("io.ktor:ktor-client-core:$ktorVersion")
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
         }
 
         jvmMain.dependencies {
