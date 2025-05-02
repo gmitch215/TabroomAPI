@@ -99,13 +99,13 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation("org.jsoup:jsoup:1.19.1")
+            implementation("org.jsoup:jsoup:1.20.1")
             implementation("io.ktor:ktor-client-java:$ktorVersion")
             implementation("ch.qos.logback:logback-classic:1.5.18")
         }
 
         androidMain.dependencies {
-            implementation("org.jsoup:jsoup:1.19.1")
+            implementation("org.jsoup:jsoup:1.20.1")
             implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
         }
 
