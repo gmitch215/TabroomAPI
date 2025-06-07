@@ -86,6 +86,7 @@ jobs:
           name: build-artifacts-${{ matrix.name }}
           path: |
             build/classes/
+            build/bin/
             build/libs/
             build/dist/
             build/packages/js/

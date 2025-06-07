@@ -4,6 +4,8 @@ import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
@@ -86,10 +88,9 @@ kotlin {
     watchosDeviceArm64()
     watchosSimulatorArm64()
 
+    val ktorVersion = "3.1.3"
+    val ksoupVersion = "0.2.0"
     sourceSets {
-        val ktorVersion = "3.1.3"
-        val ksoupVersion = "0.2.0"
-
         commonMain.dependencies {
             api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
             api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
@@ -131,6 +132,35 @@ kotlin {
         jsMain.dependencies {
             api("io.ktor:ktor-client-js:$ktorVersion")
             api("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
+        }
+    }
+
+    targets.filterIsInstance<KotlinNativeTarget>().forEach { target ->
+        target.binaries {
+            staticLib(listOf(if (hasProperty("snapshot")) NativeBuildType.DEBUG else NativeBuildType.RELEASE)) {
+                baseName = project.name
+                export("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
+                export("io.ktor:ktor-client-core:$ktorVersion")
+
+                if ("mingw" in target.name)
+                    export("io.ktor:ktor-client-winhttp:$ktorVersion")
+                else if ("os" in target.name)
+                    export("io.ktor:ktor-client-darwin:${ktorVersion}")
+                else
+                    export("io.ktor:ktor-client-curl:${ktorVersion}")
+            }
+        }
+    }
+
+    cocoapods {
+        version = project.version.toString()
+        summary = desc
+        homepage = "https://github.com/gmitch215/TabroomAPI"
+        name = "TabroomAPI"
+
+        framework {
+            baseName = "TabroomAPI"
+            isStatic = false
         }
     }
 }
