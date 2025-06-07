@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
+import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 
 plugins {
     kotlin("multiplatform") version "2.1.21"
@@ -222,6 +223,10 @@ tasks {
             html.required.set(true)
             html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
         }
+    }
+
+    named("jvmTest", KotlinJvmTest::class) {
+        jvmArgs = listOf("-Xmx3G", "-Xms3G")
     }
 
     if ("windows" in System.getProperty("os.name").lowercase()) {
