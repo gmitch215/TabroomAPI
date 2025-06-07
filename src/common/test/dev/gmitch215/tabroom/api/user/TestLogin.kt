@@ -1,6 +1,8 @@
-package dev.gmitch215.tabroom.util
+package dev.gmitch215.tabroom.api.user
 
-import dev.gmitch215.tabroom.api.user.*
+import dev.gmitch215.tabroom.util.isLoggedIn
+import dev.gmitch215.tabroom.util.login
+import dev.gmitch215.tabroom.util.logout
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,8 +17,8 @@ class TestLogin {
 
     @Test
     fun testLogin() = runTest(timeout = 2.minutes) { try {
-        val username = System.getenv("TABROOM_USERNAME")
-        val password = System.getenv("TABROOM_PASSWORD")
+        val username = getEnv("TABROOM_USERNAME")
+        val password = getEnv("TABROOM_PASSWORD")
 
         if (username == null || password == null) {
             println("Warning: TABROOM_USERNAME and TABROOM_PASSWORD must be set in the environment.")
@@ -100,7 +102,9 @@ class TestLogin {
             assertTrue { session.browser.isNotEmpty() }
             assertTrue { session.ip.isNotEmpty() }
         }
-    } finally { logout() }}
+    } finally {
+        logout()
+    }}
 
     @Test
     fun testLoggedOut() = runTest {
@@ -113,8 +117,8 @@ class TestLogin {
 
     @Test
     fun testLogout() = runTest {
-        val username = System.getenv("TABROOM_USERNAME")
-        val password = System.getenv("TABROOM_PASSWORD")
+        val username = getEnv("TABROOM_USERNAME")
+        val password = getEnv("TABROOM_PASSWORD")
 
         if (username == null || password == null) {
             println("Warning: TABROOM_USERNAME and TABROOM_PASSWORD must be set in the environment.")

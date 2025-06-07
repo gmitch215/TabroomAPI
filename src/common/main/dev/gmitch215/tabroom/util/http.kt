@@ -33,18 +33,23 @@ internal val cache = mutableMapOf<String, Document>()
 internal suspend fun String.fetchDocument(useToken: Boolean = true): Document {
     if (this in cache) return cache[this]!!
 
-    val res = client.get(this) {
-        headers {
-            append("User-Agent", USER_AGENT)
+    val res = try {
+        client.get(this) {
+            headers {
+                append("User-Agent", USER_AGENT)
+                append("Host", substringAfter("://").substringBefore('/'))
 
-            append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            append("Accept-Language", "en-US,en;q=0.9")
-            append("Connection", "keep-alive")
-            append("Upgrade-Insecure-Requests", "1")
+                append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                append("Accept-Language", "en-US,en;q=0.9")
+                append("Connection", "keep-alive")
+                append("Upgrade-Insecure-Requests", "1")
+            }
+
+            if (isLoggedIn && useToken)
+                cookie("TabroomToken", token!!)
         }
-
-        if (isLoggedIn && useToken)
-            cookie("TabroomToken", token!!)
+    } catch (e: Throwable) {
+        throw IOException("Error happened when trying to fetch document '$this': ${e.message}", e)
     }
 
     if (!res.status.isSuccess()) throw IOException("Failed to fetch document '$this': ${res.status}\n${res.bodyAsText(Charsets.UTF_8)}")
