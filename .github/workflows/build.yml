@@ -83,7 +83,7 @@ jobs:
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.name }}
+          name: build-artifacts-${{ matrix.name }}-${{ github.run_id }}
           path: |
             build/classes/
             build/bin/
@@ -189,6 +189,8 @@ jobs:
           update-comment: true
           min-coverage-overall: 85
           min-coverage-changed-files: 90
+      - name: Stop Gradle
+        run: ./gradlew --stop
 
   deploy:
     runs-on: ubuntu-latest
