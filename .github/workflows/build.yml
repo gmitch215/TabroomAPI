@@ -43,6 +43,11 @@ jobs:
     needs: setup
     timeout-minutes: 360
 
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -81,6 +86,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean assemble
       - name: Archive Build Artifacts
+        id: archive
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-${{ matrix.name }}-${{ github.run_id }}
@@ -92,6 +98,11 @@ jobs:
             build/packages/js/
             build/outputs/
             build/cocoapods/
+      - name: Attest Build Artifacts
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: build-artifacts-${{ matrix.name }}-${{ github.run_id }}
+          subject-digest: sha256:${{ steps.archive.outputs.artifact-digest }}
       - name: Stop Gradle
         run: ./gradlew --stop
 
