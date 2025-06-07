@@ -14,7 +14,7 @@ plugins {
     kotlin("plugin.serialization") version "2.1.21"
     id("org.jetbrains.kotlin.native.cocoapods") version "2.1.21"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.android.library") version "8.10.0"
+    id("com.android.library") version "8.10.1"
     id("com.vanniktech.maven.publish") version "0.32.0"
     id("dev.petuska.npm.publish") version "3.5.3"
 
@@ -23,7 +23,7 @@ plugins {
     signing
 }
 
-val v = "0.3.0"
+val v = "0.3.1"
 
 group = "dev.gmitch215"
 version = "${if (project.hasProperty("snapshot")) "$v-SNAPSHOT" else v}${project.findProperty("suffix")?.toString()?.run { "-${this}" } ?: ""}"
@@ -80,54 +80,57 @@ kotlin {
 
     tvosArm64()
     tvosX64()
+    tvosSimulatorArm64()
     watchosArm32()
     watchosArm64()
+    watchosDeviceArm64()
+    watchosSimulatorArm64()
 
     sourceSets {
         val ktorVersion = "3.1.3"
         val ksoupVersion = "0.2.0"
 
         commonMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
-            implementation("io.ktor:ktor-client-core:$ktorVersion")
+            api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+            api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+            api("io.ktor:ktor-client-core:$ktorVersion")
         }
 
         commonTest.dependencies {
-            implementation(kotlin("test"))
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+            api(kotlin("test"))
+            api("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
         }
 
         jvmMain.dependencies {
-            implementation("org.jsoup:jsoup:1.20.1")
-            implementation("io.ktor:ktor-client-java:$ktorVersion")
-            implementation("ch.qos.logback:logback-classic:1.5.18")
+            api("org.jsoup:jsoup:1.20.1")
+            api("io.ktor:ktor-client-java:$ktorVersion")
+            api("ch.qos.logback:logback-classic:1.5.18")
         }
 
         androidMain.dependencies {
-            implementation("org.jsoup:jsoup:1.20.1")
-            implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+            api("org.jsoup:jsoup:1.20.1")
+            api("io.ktor:ktor-client-okhttp:$ktorVersion")
         }
 
         nativeMain.dependencies {
-            implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
+            api("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
         }
 
         mingwMain.dependencies {
-            implementation("io.ktor:ktor-client-winhttp:$ktorVersion")
+            api("io.ktor:ktor-client-winhttp:$ktorVersion")
         }
 
         appleMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+            api("io.ktor:ktor-client-darwin:$ktorVersion")
         }
 
         linuxMain.dependencies {
-            implementation("io.ktor:ktor-client-cio:$ktorVersion")
+            api("io.ktor:ktor-client-curl:$ktorVersion")
         }
 
         jsMain.dependencies {
-            implementation("io.ktor:ktor-client-js:$ktorVersion")
-            implementation("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
+            api("io.ktor:ktor-client-js:$ktorVersion")
+            api("com.fleeksoft.ksoup:ksoup-lite:$ksoupVersion")
         }
     }
 }
@@ -153,7 +156,7 @@ fun KotlinMultiplatformExtension.configureSourceSets() {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 35
     namespace = "dev.gmitch215.tabroomapi"
 
     compileOptions {
@@ -189,6 +192,10 @@ tasks {
             html.required.set(true)
             html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
         }
+    }
+
+    if ("windows" in System.getProperty("os.name").lowercase()) {
+        named("linkDebugTestLinuxX64") { enabled = false }
     }
 }
 
