@@ -13,12 +13,12 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
 import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 
 plugins {
-    kotlin("multiplatform") version "2.1.21"
-    kotlin("plugin.serialization") version "2.1.21"
-    id("org.jetbrains.kotlin.native.cocoapods") version "2.1.21"
+    kotlin("multiplatform") version "2.2.0"
+    kotlin("plugin.serialization") version "2.2.0"
+    id("org.jetbrains.kotlin.native.cocoapods") version "2.2.0"
     id("org.jetbrains.dokka") version "2.0.0"
-    id("com.android.library") version "8.10.1"
-    id("com.vanniktech.maven.publish") version "0.32.0"
+    id("com.android.library") version "8.11.0"
+    id("com.vanniktech.maven.publish") version "0.33.0"
     id("dev.petuska.npm.publish") version "3.5.3"
 
     `maven-publish`
@@ -104,13 +104,13 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            api("org.jsoup:jsoup:1.20.1")
+            api("org.jsoup:jsoup:1.21.1")
             api("io.ktor:ktor-client-java:$ktorVersion")
             api("ch.qos.logback:logback-classic:1.5.18")
         }
 
         androidMain.dependencies {
-            api("org.jsoup:jsoup:1.20.1")
+            api("org.jsoup:jsoup:1.21.1")
             api("io.ktor:ktor-client-okhttp:$ktorVersion")
         }
 
