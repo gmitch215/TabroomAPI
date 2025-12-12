@@ -87,7 +87,7 @@ jobs:
         run: ./gradlew clean assemble
       - name: Archive Build Artifacts
         id: archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: build-artifacts-${{ matrix.name }}-${{ github.run_id }}
           path: |
@@ -157,7 +157,7 @@ jobs:
         run: ./gradlew allTests jvmJacocoTestReport
       - name: Archive Test Reports
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-report-${{ matrix.name }}-${{ github.run_id }}
           path: build/reports/tests/
@@ -184,7 +184,7 @@ jobs:
           echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
       - name: Upload Code Coverage Artifacts (Push)
         if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report-${{ matrix.name }}-${{ github.run_id }}
           path: "*/coverage-results.md"
